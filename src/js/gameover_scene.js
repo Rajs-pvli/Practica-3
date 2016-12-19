@@ -9,10 +9,6 @@ var GameOver = {
                                           this, 2, 1, 0);
         button.anchor.set(0.5);
 
-        //Texto en el menú
-        var goText = this.game.add.text(400, 100, "GameOver");
-        goText.anchor.set(0.5);
-
         //Texto dentro del botón
         var text = this.game.add.text(0, 0, "Reset Game");
         text.anchor.set(0.5);
@@ -29,6 +25,10 @@ var GameOver = {
         var text2 = this.game.add.text(0, 0, "Return menu");
         text2.anchor.set(0.5);
         button2.addChild(text2);
+
+          //Texto en el menú
+        var goText = this.game.add.text(400, 100, "GameOver");
+        goText.anchor.set(0.5);
     },
     
 

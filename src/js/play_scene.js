@@ -1,7 +1,7 @@
 'use strict';
 
-//Enumerados: PlayerState son los estado por los que pasa el player. Directions son las direcciones a las que se puede
-//mover el player.
+/*Enumerados: PlayerState son los estado por los que pasa el player. 
+Directions son las direcciones a las que se puede mover el player.*/
 var PlayerState = {'JUMP':0, 'RUN':1, 'FALLING':2, 'STOP':3}
 var Direction = {'LEFT':0, 'RIGHT':1, 'NONE':3}
 
@@ -17,24 +17,28 @@ var PlayScene = {
     //Método constructor...
   create: function () {
       //Creamos al player con un sprite por defecto.
-      //TODO 5 Creamos a rush 'rush'  con el sprite por defecto en el 10, 10 con la animación por defecto 'rush_idle01'
+      //Creamos a rush 'rush'  con el sprite por defecto en el 10, 10 con la animación por defecto 'rush_idle01'
       this._rush = this.game.add.sprite(10,10,'rush');
 
-      //TODO 4: Cargar el tilemap 'tilemap' y asignarle al tileset 'patrones' la imagen de sprites 'tiles'
-      
+      //Cargamos el tilemap en el map
       this.map =  this.game.add.tilemap('tilemap');
 
+      //Asignamos al tileset 'patrones' la imagen de sprites tiles
       this.map.addTilesetImage('patrones','tiles');
 
       //Creacion de las layers
       this.backgroundLayer = this.map.createLayer('BackgroundLayer');
       this.groundLayer = this.map.createLayer('GroundLayer');
+
       //plano de muerte
       this.death = this.map.createLayer('Death');
+
       //Colisiones con el plano de muerte y con el plano de muerte y con suelo.
+      //Rango de tiles con colision
       this.map.setCollisionBetween(1, 5000, true, 'Death');
       this.map.setCollisionBetween(1, 5000, true, 'GroundLayer');
       this.death.visible = false;
+
       //Cambia la escala a x3.
       this.groundLayer.setScale(3,3);
       this.backgroundLayer.setScale(3,3);
@@ -50,13 +54,54 @@ var PlayScene = {
       this._rush.animations.add('jump',
                      Phaser.Animation.generateFrameNames('rush_jump',2,2,'',2),0,false);
       this.configure();
+
+
+        this.buttonContinue = this.game.add.button(this.game.camera.x, 
+                                               this.game.camera.y + 100, 
+                                               'button', 
+                                               this.actionOnClick, 
+                                               this, 2, 0, 0);
+        var textContinue = this.game.add.text(this.buttonContinue.x + 140, this.buttonContinue.y - 20, "Continue");//Creamos el texto
+        textContinue.font = 'Sniglet';//Elegimos la fuente
+        this.buttonContinue.addChild(textContinue);//Metemos el texto en el botón
+        textContinue.anchor.set(-2);//Anclamos el botón
+
+        this.buttonContinue.visible = false;
+        this.buttonContinue.inputEnabled = false;
+
+        this.pause = false;
+
   },
+
+   //Al pulsar el botón
+    actionOnClick: function(){
+        this.game.physics.arcade.isPaused=false;
+        this.pause = false;
+        this.buttonContinue.visible = false;
+        this.buttonContinue.inputEnabled = false;
+
+    }, 
     
     //IS called one per frame.
     update: function () {
+     
+       if (!this.pause)
+       {
         var moveDirection = new Phaser.Point(0, 0);
         var collisionWithTilemap = this.game.physics.arcade.collide(this._rush, this.groundLayer);
-        var movement = this.GetMovement();
+        var movement = this.GetMovement();//Input derecha/izquierda
+
+        if (this.game.input.keyboard.isDown(Phaser.Keyboard.DOWN)){           
+            this.buttonContinue.visible = true;
+            this.buttonContinue.inputEnabled = true;
+            this.game.physics.arcade.isPaused=true;
+            this.pause = true;
+            this.buttonContinue.anchor.set(-2);//Anclamos el botón
+
+            this.buttonContinue.x = this.game.camera.x;
+
+        }
+
         //transitions
         switch(this._playerState)
         {
@@ -80,6 +125,7 @@ var PlayScene = {
                 break;
                 
             case PlayerState.JUMP:
+
                 
                 var currentJumpHeight = this._rush.y - this._initialJumpHeight;
                 this._playerState = (currentJumpHeight*currentJumpHeight < this._jumpHight*this._jumpHight)
@@ -113,7 +159,7 @@ var PlayScene = {
                     if(this._rush.scale.x < 0)
                         this._rush.scale.x *= -1;
                 }
-                else{
+                else if (movement === Direction.LEFT){
                     moveDirection.x = -this._speed;
                     if(this._rush.scale.x > 0)
                         this._rush.scale.x *= -1; 
@@ -125,36 +171,43 @@ var PlayScene = {
                 break;    
         }
         //movement
-        this.movement(moveDirection,5,
+        this.movement(moveDirection,50,
                       this.backgroundLayer.layer.widthInPixels*this.backgroundLayer.scale.x - 10);
-        this.checkPlayerFell();
+
+        this.checkPlayerFell();//Comprueba si el jugador se ha caido
+    }
+    
     },
     
+    //Detección de si puede saltar
+    isJumping: function(collisionWithTilemap){
+        return this.canJump(collisionWithTilemap) && 
+            this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR);
+    },
     
     canJump: function(collisionWithTilemap){
-        return this.isStanding() && collisionWithTilemap || this._jamping;
+        return this.isStanding() && collisionWithTilemap;//jamping???
     },
+
+    isStanding: function(){
+        return this._rush.body.blocked.down//No te puedes mover hacia abajo
+         || this._rush.body.touching.down;//Colisionas por debajo
+    },
+    //Detección de si puede saltar//
+
     
+    //Colisión con muerte
     onPlayerFell: function(){
         this.game.state.start('gameOver');
         this.destroy();
-        //TODO 6 Carga de 'gameOver';
     },
     
     checkPlayerFell: function(){
         if(this.game.physics.arcade.collide(this._rush, this.death))
             this.onPlayerFell();
     },
-        
-    isStanding: function(){
-        return this._rush.body.blocked.down || this._rush.body.touching.down
-    },
-        
-    isJumping: function(collisionWithTilemap){
-        return this.canJump(collisionWithTilemap) && 
-            this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR);
-    },
-        
+    //Colisión con muerte//
+  
     GetMovement: function(){
         var movement = Direction.NONE
         //Move Right
@@ -167,30 +220,37 @@ var PlayScene = {
         }
         return movement;
     },
-    //configure the scene
-    configure: function(){
-        //Start the Arcade Physics systems
-        this.game.world.setBounds(0, 0, 2400, 160);
-        this.game.physics.startSystem(Phaser.Physics.ARCADE);
-        this.game.stage.backgroundColor = '#a9f0ff';
-        this.game.physics.arcade.enable(this._rush);
-        
-        this._rush.body.bounce.y = 0.2;
-        this._rush.body.gravity.y = 20000;
-        this._rush.body.gravity.x = 0;
-        this._rush.body.velocity.x = 0;
-        this.game.camera.follow(this._rush);
-    },
-    //move the player
+
+     //Movimiento del jugador
     movement: function(point, xMin, xMax){
         this._rush.body.velocity = point;// * this.game.time.elapseTime;
-        
+
+        //Comrpuebo con los límites del juego
+
         if((this._rush.x < xMin && point.x < 0)|| (this._rush.x > xMax && point.x > 0))
             this._rush.body.velocity.x = 0;
 
     },
     
-    //TODO 9 destruir los recursos tilemap, tiles y logo.
+
+    //Configura la escena al inicio
+    configure: function(){
+        //Start the Arcade Physics systems
+        this.game.world.setBounds(0, 0, 2400, 160);//Límite del mundo
+
+        this.game.physics.startSystem(Phaser.Physics.ARCADE);//Carga físicas
+        this.game.stage.backgroundColor = '#a9f0ff';//Color de fondo
+        this.game.physics.arcade.enable(this._rush);
+        
+        this._rush.body.bounce.y = 0.2; //Rebota pero no se modifica nada
+        this._rush.body.gravity.y = 20000;//Gravedad
+        this._rush.body.gravity.x = 0;
+        this._rush.body.velocity.x = 0;
+        this.game.camera.follow(this._rush);//La cámara te sigue
+    },
+
+   
+    //Destruimos los recursos tilemap, tiles y logo.
     destroy: function()
     {
         this.groundLayer.destroy();

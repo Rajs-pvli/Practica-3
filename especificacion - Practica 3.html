@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title>Práctica 3: primera versión de un videojuego en JavaScript (arcade plataformas)</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <link rel="stylesheet" href="../shared/docs.css" type="text/css" />
+  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML-full" type="text/javascript"></script>
+</head>
+<body>
+<div id="header">
+<h1 class="title">Práctica 3: primera versión de un videojuego en JavaScript (arcade plataformas)</h1>
+</div>
+<p>Esta práctica consiste en hacer un arcade 2D de plataformas en Phaser, que se pueda ejecutar, por tanto, en un navegador. El objetivo es aplicar los conocimientos adquiridos durante el curso hasta la fecha y empezar a relacionarlos como un juego.</p>
+<p>A diferencia de las prácticas anteriores, para esta no hay un guión específico, ya que cada grupo tendrá que diseñar y crear su propio juego.</p>
+<h1 id="continuación-de-la-práctica">Continuación de la práctica</h1>
+<p>Las prácticas 4 y 5 (a priori) serán continuaciones de la 3 en las que se añadirán características y empaquetado. Por lo tanto, es importante (y recomendable) que se procure hacer una base de código robusta, mantenible y de calidad con el fin de que las ampliaciones tengan un coste razonable.</p>
+<h1 id="el-juego">El juego</h1>
+<p>La temática y la mecánica del juego son libres, siempre y cuando se adhieran a los siguientes requisitos:</p>
+<h2 id="características-obligatorias">Características obligatorias</h2>
+<ul>
+<li>Será un <a href="https://en.wikipedia.org/wiki/Platform_game">juego de plataformas</a> en 2D.</li>
+<li>Puede ser vertical, horizontal o de recorrido libre.</li>
+<li>Se usará Phaser como motor de juego. Es posible usar otras librerías, siempre que su funcionalidad no solape con la que se espera que se implemente. El equipo docente tendrá que aceptar el uso de las librerías propuestas a priori. Si un grupo usa librerías que no sean aceptadas de antemano por el equipo docente, <em>la práctica estará suspensa</em>.</li>
+<li>La entrada se hará por teclado.</li>
+<li>Se incluirán:
+<ul>
+<li>una pantalla de carga,</li>
+<li>una pantalla de menú</li>
+<li>un modo de juego al menos con un nivel</li>
+<li>una pantalla de pausa durante el juego con al menos dos opciones: Continuar el juego y Salir. Salir te llevará al menú principal.</li>
+<li>un modo de “fin de partida”, bien al superar el o los niveles, bien cuando muere el jugador.</li>
+</ul></li>
+<li>Se tratará de llevar un personaje desde un punto a otro. El personaje podrá moverse hacia la izquierda y la derecha y podrá saltar.
+<ul>
+<li>Al llegar al punto exitosamente, se informará de la victoria y se irá al menú tras la pantalla de fin de partida.</li>
+<li>Si “muere”, se informará también y se irá al menú tras la pantalla de fin de partida.</li>
+</ul></li>
+<li>Al menos debe haber un tipo de enemigo.</li>
+<li>“Morirá” por contacto con enemigos, que obligatoriamente han de moverse (aunque sea simplemente en la dirección contraria).</li>
+<li>También podrá morir “cayendo” por zonas</li>
+<li>Los niveles se crearán con tiles, y se usará el formato de <code>Tiled</code> (se recomienda usar esta herramienta).</li>
+<li>No se tendrán en cuenta las animaciones, parallax o el audio, ya que serán el núcleo de las ampliaciones de la práctica 4.</li>
+<li>No se tendrá en cuenta el despliegue del juego, ya que será el núcleo de las ampliaciones de la práctica 5.</li>
+</ul>
+<p>Además, se hará un mini “GDD” que <strong>no podrá exceder de una cara en A4</strong> en ningún caso. Es decir, será un documento corto descriptivo en el que tendréis que:</p>
+<ul>
+<li>Poner título al juego.</li>
+<li>Publico objetivo, calificación de edad estimada.</li>
+<li>Contar la historia (es obligatorio una) y los objetivos.</li>
+<li>Explicar cómo jugar.</li>
+<li>Hacer un poco de “venta” del juego: ¿por qué querría alguien jugar al juego?</li>
+<li>Referencias utilizadas.</li>
+</ul>
+<h2 id="características-opcionales">Características opcionales</h2>
+<p><em>Todas</em>. Cualquier aspecto extra del juego, tanto a nivel tecnológico como de diseño, será aceptado y tenido en cuenta tanto para compensar la evaluación como en el apartado de la colaboración de evaluación continua.</p>
+<p>No hay límite en lo que se puede hacer. La intención de esto es animaros a que creéis videojuegos y olvidéis un poco la nota y la evaluación. Pensad que, si el juego merece la pena ser publicado online, será una primera página de vuestro <em>portfolio</em>.</p>
+<h2 id="no-es-una-práctica-de-diseño-de-juegos">No es una práctica de diseño de juegos</h2>
+<p>Es importante tener en cuenta que no se trata de una práctica de diseño de videojuegos. Por supuesto que se valorará cualquier apartado de <em>game-play</em> o gráfico, pero no compensará ningún defecto en la programación (la asignatura, al fin y al cabo, es de componente técnico).</p>
+<p>Aún así, tened en cuenta que al final del curso se harán presentaciones de vuestros proyectos y, cuanto mejores sean, más valor se les dará y, lo más importante, más habréis aprendido.</p>
+</body>
+</html>
