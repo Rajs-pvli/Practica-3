@@ -2,7 +2,7 @@
 
 /*Enumerados: PlayerState son los estado por los que pasa el player. 
 Directions son las direcciones a las que se puede mover el player.*/
-var PlayerState = {'JUMP':0, 'RUN':1, 'FALLING':2, 'STOP':3}
+var PlayerState = {'JUMP':0, 'RUN':1, 'FALLING':2, 'STOP':3, 'GRAB':4}
 var Direction = {'LEFT':0, 'RIGHT':1, 'NONE':3}
 
 //Scena de juego.
@@ -53,6 +53,8 @@ var PlayScene = {
                     Phaser.Animation.generateFrameNames('rush_idle',1,1,'',2),0,false);
       this._rush.animations.add('jump',
                      Phaser.Animation.generateFrameNames('rush_jump',2,2,'',2),0,false);
+      this._rush.animations.add('grab',
+                     Phaser.Animation.generateFrameNames('rush_kick_a_',1,3,'',2),10,true);//Animación de agarre
       this.configure();
 
 
@@ -91,6 +93,7 @@ var PlayScene = {
         var collisionWithTilemap = this.game.physics.arcade.collide(this._rush, this.groundLayer);
         var movement = this.GetMovement();//Input derecha/izquierda
 
+        //Pausa
         if (this.game.input.keyboard.isDown(Phaser.Keyboard.DOWN)){           
             this.buttonContinue.visible = true;
             this.buttonContinue.inputEnabled = true;
@@ -126,10 +129,19 @@ var PlayScene = {
                 
             case PlayerState.JUMP:
 
-                
-                var currentJumpHeight = this._rush.y - this._initialJumpHeight;
-                this._playerState = (currentJumpHeight*currentJumpHeight < this._jumpHight*this._jumpHight)
+                if(this.isGrabbing(collisionWithTilemap))//Comprobamos si está colisionando
+                {
+                    this._playerState = PlayerState.GRAB;
+                    //this._rush.animations.play('grab');
+
+                }
+
+                else
+                {
+                    var currentJumpHeight = this._rush.y - this._initialJumpHeight;
+                    this._playerState = (currentJumpHeight*currentJumpHeight < this._jumpHight*this._jumpHight)
                     ? PlayerState.JUMP : PlayerState.FALLING;
+                }
                 break;
                 
             case PlayerState.FALLING:
@@ -138,12 +150,29 @@ var PlayScene = {
                         this._playerState = PlayerState.RUN;
                         this._rush.animations.play('run');
                     }
+
+                    
                     else{
                         this._playerState = PlayerState.STOP;
                         this._rush.animations.play('stop');
                     }
                 }
-                break;     
+                else if(this.isGrabbing(collisionWithTilemap))
+                      this._playerState = PlayerState.GRAB; 
+                break;
+
+            case PlayerState.GRAB:
+            //He puesto que si detecta la tecla de espacio, pueda saltar
+            //Cuidado: el problema es que si se llama a isJumping, se llama a isStanding, pero isStanding solo es true cuando
+            //el personaje está en el suelo, pero en ese caso no es así
+                if(this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){//Caso en el que salta estando agarrado                  
+                    this._playerState = PlayerState.JUMP;
+                    this._initialJumpHeight = this._rush.y;
+                    this._rush.animations.play('jump');
+                    //this._initialJumpHeight = this._rush.y;
+                    //Hay que evitar que pueda saltar hacia arriba
+
+                }     
         }
         //States
         switch(this._playerState){
@@ -168,7 +197,12 @@ var PlayScene = {
                     moveDirection.y = -this._jumpSpeed;
                 if(this._playerState === PlayerState.FALLING)
                     moveDirection.y = 0;
+                //if(this._playerState === PlayerState.GRAB)
+                   // moveDirection.y = 0;
                 break;    
+            case PlayerState.GRAB:
+                moveDirection.y = this.currentJumpHeight;
+                break;
         }
         //movement
         this.movement(moveDirection,50,
@@ -177,6 +211,12 @@ var PlayScene = {
         this.checkPlayerFell();//Comprueba si el jugador se ha caido
     }
     
+    },
+
+    //Comprobamos si está en contacto con la pared tanto por la derecha como por la izquierda y bloqueamos el movimiento
+    isGrabbing: function(collisionWithTilemap){
+        return collisionWithTilemap && (this._rush.body.touching.right || this._rush.body.blocked.right)
+         || (this._rush.body.touching.left || this._rush.body.blocked.left); //|| (this._rush.body.touching.up || this._rush.body.blocked.up);
     },
     
     //Detección de si puede saltar
