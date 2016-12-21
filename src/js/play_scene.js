@@ -5,6 +5,8 @@ Directions son las direcciones a las que se puede mover el player.*/
 var PlayerState = {'JUMP':0, 'RUN':1, 'FALLING':2, 'STOP':3, 'GRAB':4, 'UNHAND': 5}
 var Direction = {'LEFT':0, 'RIGHT':1, 'NONE':3}
 
+var nextJump = 0;
+
 //Scena de juego.
 var PlayScene = {
     _rush: {}, //player
@@ -112,10 +114,12 @@ var PlayScene = {
         {
             case PlayerState.STOP:
             case PlayerState.RUN:
-                if(this.isJumping(collisionWithTilemap)){
+                if(this.isJumping(collisionWithTilemap) && this.game.time.now > nextJump){
                     this._playerState = PlayerState.JUMP;
                     this._initialJumpHeight = this._rush.y;
                     this._rush.animations.play('jump');
+                    nextJump = this.game.time.now + 1000;
+
                 }
                 else{
                     if(movement !== Direction.NONE){
@@ -134,16 +138,23 @@ var PlayScene = {
                 if(this.isGrabbing(collisionWithTilemap))//Comprobamos si está colisionando
                 {
                     this._playerState = PlayerState.GRAB;
-                    //this._rush.animations.play('grab');
-
+                    this._rush.animations.play('grab');
                 }
 
+                
                 else
                 {
-                    var currentJumpHeight = this._rush.y - this._initialJumpHeight;
-                    this._playerState = (currentJumpHeight*currentJumpHeight < this._jumpHight*this._jumpHight)
+                var currentJumpHeight = this._rush.y - this._initialJumpHeight;
+                this._playerState = (currentJumpHeight*currentJumpHeight < this._jumpHight*this._jumpHight)
                     ? PlayerState.JUMP : PlayerState.FALLING;
                 }
+
+                           if (collisionWithTilemap && this._rush.body.blocked.up//No te puedes mover hacia abajo
+         || this._rush.body.touching.up)
+                    this._playerState = PlayerState.FALLING;
+                
+         
+
                 break;
                 
             case PlayerState.FALLING:
@@ -158,17 +169,24 @@ var PlayScene = {
                         this._playerState = PlayerState.STOP;
                         this._rush.animations.play('stop');
                     }
+                    nextJump = 0;
+
                 }
                 else if(this.isGrabbing(collisionWithTilemap))
-                      this._playerState = PlayerState.GRAB; 
+                {
+                    this._playerState = PlayerState.GRAB; 
+                    this._rush.animations.play('grab');
+
+                }
                 break;
 
             case PlayerState.GRAB://Caso agarre
             
-                if(this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){//Caso en el que salta estando agarrado                  
+                if(this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR) && this.game.time.now > nextJump){//Caso en el que salta estando agarrado                  
                     this._playerState = PlayerState.UNHAND;
                     this._initialJumpHeight = this._rush.y;
                     this._rush.animations.play('jump');
+                    nextJump = this.game.time.now + 1000;
                     
 
                 } 
@@ -181,7 +199,8 @@ var PlayScene = {
 
                 if(this.isGrabbing(collisionWithTilemap))//Caso en el que se agarra
                 {
-                    this._playerState = PlayerState.GRAB; 
+                    this._playerState = PlayerState.GRAB;
+                    this._rush.animations.play('grab');
                 }
 
                 else if (!collisionWithTilemap)
@@ -241,11 +260,11 @@ var PlayScene = {
 
                 //Caso en el que la dir de salto es izquierda
                 if (this.jumpDirection === Direction.LEFT) 
-                    moveDirection.x = -this._jumpSpeed / 3 ;
+                    moveDirection.x = -this._jumpSpeed / 3 - 100 ;
                 
                 //Caso en el que la dir de salto es derecha
                 else if (this.jumpDirection === Direction.RIGHT)
-                    moveDirection.x = this._jumpSpeed / 3;                                  
+                    moveDirection.x = this._jumpSpeed / 3 + 100;                                  
 
                 break;
                 
@@ -341,7 +360,7 @@ var PlayScene = {
         this._rush.body.gravity.y = 20000;//Gravedad
         this._rush.body.gravity.x = 0;
         this._rush.body.velocity.x = 0;
-        this.game.camera.follow(this._rush);//La cámara te sigue
+        this.game.camera.follow(this._rush,Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);//La cámara te sigue
     },
 
    
