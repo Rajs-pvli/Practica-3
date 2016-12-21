@@ -2,7 +2,7 @@
 
 /*Enumerados: PlayerState son los estado por los que pasa el player. 
 Directions son las direcciones a las que se puede mover el player.*/
-var PlayerState = {'JUMP':0, 'RUN':1, 'FALLING':2, 'STOP':3, 'GRAB':4}
+var PlayerState = {'JUMP':0, 'RUN':1, 'FALLING':2, 'STOP':3, 'GRAB':4, 'UNHAND': 5}
 var Direction = {'LEFT':0, 'RIGHT':1, 'NONE':3}
 
 //Scena de juego.
@@ -79,6 +79,8 @@ var PlayScene = {
     actionOnClick: function(){
         this.game.physics.arcade.isPaused=false;
         this.pause = false;
+        this._rush.animations.paused = false;
+
         this.buttonContinue.visible = false;
         this.buttonContinue.inputEnabled = false;
 
@@ -94,13 +96,13 @@ var PlayScene = {
         var movement = this.GetMovement();//Input derecha/izquierda
 
         //Pausa
-        if (this.game.input.keyboard.isDown(Phaser.Keyboard.DOWN)){           
+        if (this.game.input.keyboard.isDown(Phaser.Keyboard.P)){           
             this.buttonContinue.visible = true;
             this.buttonContinue.inputEnabled = true;
             this.game.physics.arcade.isPaused=true;
             this.pause = true;
             this.buttonContinue.anchor.set(-2);//Anclamos el botón
-
+            this._rush.animations.paused = true;//Paramos la animación
             this.buttonContinue.x = this.game.camera.x;
 
         }
@@ -161,19 +163,41 @@ var PlayScene = {
                       this._playerState = PlayerState.GRAB; 
                 break;
 
-            case PlayerState.GRAB:
-            //He puesto que si detecta la tecla de espacio, pueda saltar
-            //Cuidado: el problema es que si se llama a isJumping, se llama a isStanding, pero isStanding solo es true cuando
-            //el personaje está en el suelo, pero en ese caso no es así
+            case PlayerState.GRAB://Caso agarre
+            
                 if(this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){//Caso en el que salta estando agarrado                  
-                    this._playerState = PlayerState.JUMP;
+                    this._playerState = PlayerState.UNHAND;
                     this._initialJumpHeight = this._rush.y;
                     this._rush.animations.play('jump');
-                    //this._initialJumpHeight = this._rush.y;
-                    //Hay que evitar que pueda saltar hacia arriba
+                    
 
-                }     
+                } 
+                else if(this.game.input.keyboard.isDown(Phaser.Keyboard.H)){//Caso en el que se suelta estando agarrado
+                    this._playerState = PlayerState.FALLING;   
+                } 
+                break;
+
+            case PlayerState.UNHAND://Caso soltarse
+
+                if(this.isGrabbing(collisionWithTilemap))//Caso en el que se agarra
+                {
+                    this._playerState = PlayerState.GRAB; 
+                }
+
+                else if (!collisionWithTilemap)
+                {
+                    var currentJumpHeight = this._rush.y - this._initialJumpHeight;
+                    this._playerState = (currentJumpHeight*currentJumpHeight < this._jumpHight*this._jumpHight)
+                    ? PlayerState.UNHAND : PlayerState.FALLING;
+                }
+
+                else if (collisionWithTilemap)
+                        this._playerState = PlayerState.FALLING;
+
+            break;
+
         }
+
         //States
         switch(this._playerState){
                 
@@ -186,23 +210,45 @@ var PlayScene = {
                 if(movement === Direction.RIGHT){
                     moveDirection.x = this._speed;
                     if(this._rush.scale.x < 0)
+                    {
+                        this._rush.body.position.x = this._rush.body.position.x -30;
                         this._rush.scale.x *= -1;
+                    }
                 }
                 else if (movement === Direction.LEFT){
                     moveDirection.x = -this._speed;
                     if(this._rush.scale.x > 0)
+                    {
+                        this._rush.body.position.x = this._rush.body.position.x +30;
                         this._rush.scale.x *= -1; 
+                    }
                 }
                 if(this._playerState === PlayerState.JUMP)
                     moveDirection.y = -this._jumpSpeed;
                 if(this._playerState === PlayerState.FALLING)
                     moveDirection.y = 0;
-                //if(this._playerState === PlayerState.GRAB)
-                   // moveDirection.y = 0;
-                break;    
+
+                break;  
+
             case PlayerState.GRAB:
-                moveDirection.y = this.currentJumpHeight;
+                moveDirection.y =  this.currentJumpHeight;
+
+
                 break;
+
+            case PlayerState.UNHAND:
+                moveDirection.y = -this._jumpSpeed;
+
+                //Caso en el que la dir de salto es izquierda
+                if (this.jumpDirection === Direction.LEFT) 
+                    moveDirection.x = -this._jumpSpeed / 3 ;
+                
+                //Caso en el que la dir de salto es derecha
+                else if (this.jumpDirection === Direction.RIGHT)
+                    moveDirection.x = this._jumpSpeed / 3;                                  
+
+                break;
+                
         }
         //movement
         this.movement(moveDirection,50,
@@ -215,8 +261,17 @@ var PlayScene = {
 
     //Comprobamos si está en contacto con la pared tanto por la derecha como por la izquierda y bloqueamos el movimiento
     isGrabbing: function(collisionWithTilemap){
-        return collisionWithTilemap && (this._rush.body.touching.right || this._rush.body.blocked.right)
-         || (this._rush.body.touching.left || this._rush.body.blocked.left); //|| (this._rush.body.touching.up || this._rush.body.blocked.up);
+
+        //Si el personaje se agarra a la pared por la izquierda, la dir de salto es derecha
+        if (this._rush.body.touching.left || this._rush.body.blocked.left) 
+            this.jumpDirection = Direction.RIGHT;
+     
+        //Si el personaje se agarra a la pared por la derecha, la dir de salto es izquierda
+        else if (this._rush.body.touching.right || this._rush.body.blocked.right)
+            this.jumpDirection = Direction.LEFT;
+            
+        return this.game.input.keyboard.isDown(Phaser.Keyboard.G) && collisionWithTilemap && 
+        ((this._rush.body.touching.left || this._rush.body.blocked.left) ||(this._rush.body.touching.right || this._rush.body.blocked.right)); 
     },
     
     //Detección de si puede saltar
