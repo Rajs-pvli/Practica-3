@@ -11,8 +11,7 @@ var nextJump = 0;
 var PlayScene = {
     _rush: {}, //player
     _speed: 300, //velocidad del player
-    _jumpSpeed: 600, //velocidad de salto
-    _jumpHight: 150, //altura máxima del salto.
+    _jumpSpeed: 400, //velocidad de salto
     _playerState: PlayerState.STOP, //estado del player
     _direction: Direction.NONE,  //dirección inicial del player. NONE es ninguna dirección.
 
@@ -34,17 +33,20 @@ var PlayScene = {
 
       //plano de muerte
       this.death = this.map.createLayer('Death');
+      this.gravity = this.map.createLayer('Gravity');
 
       //Colisiones con el plano de muerte y con el plano de muerte y con suelo.
       //Rango de tiles con colision
       this.map.setCollisionBetween(1, 5000, true, 'Death');
       this.map.setCollisionBetween(1, 5000, true, 'GroundLayer');
+      this.map.setCollisionBetween(1,5000,true, 'Gravity');
       this.death.visible = false;
 
       //Cambia la escala a x3.
       this.groundLayer.setScale(3,3);
       this.backgroundLayer.setScale(3,3);
       this.death.setScale(3,3);
+      this.gravity.setScale(3,3);
       
       //this.groundLayer.resizeWorld(); //resize world and adjust to the screen
       
@@ -74,6 +76,7 @@ var PlayScene = {
         this.buttonContinue.inputEnabled = false;
 
         this.pause = false;
+
 
   },
 
@@ -120,6 +123,7 @@ var PlayScene = {
                     this._rush.animations.play('jump');
                     nextJump = this.game.time.now + 1000;
 
+
                 }
                 else{
                     if(movement !== Direction.NONE){
@@ -144,8 +148,7 @@ var PlayScene = {
                 
                 else
                 {
-                var currentJumpHeight = this._rush.y - this._initialJumpHeight;
-                this._playerState = (currentJumpHeight*currentJumpHeight < this._jumpHight*this._jumpHight)
+                this._playerState = (!this.isFalling())
                     ? PlayerState.JUMP : PlayerState.FALLING;
                 }
 
@@ -205,8 +208,7 @@ var PlayScene = {
 
                 else if (!collisionWithTilemap)
                 {
-                    var currentJumpHeight = this._rush.y - this._initialJumpHeight;
-                    this._playerState = (currentJumpHeight*currentJumpHeight < this._jumpHight*this._jumpHight)
+                    this._playerState = (!this.isFalling())
                     ? PlayerState.UNHAND : PlayerState.FALLING;
                 }
 
@@ -244,8 +246,7 @@ var PlayScene = {
                 }
                 if(this._playerState === PlayerState.JUMP)
                     moveDirection.y = -this._jumpSpeed;
-                if(this._playerState === PlayerState.FALLING)
-                    moveDirection.y = 0;
+                
 
                 break;  
 
@@ -274,6 +275,7 @@ var PlayScene = {
                       this.backgroundLayer.layer.widthInPixels*this.backgroundLayer.scale.x - 10);
 
         this.checkPlayerFell();//Comprueba si el jugador se ha caido
+        this.modifyGravity();
     }
     
     },
@@ -304,10 +306,14 @@ var PlayScene = {
     },
 
     isStanding: function(){
+
         return this._rush.body.blocked.down//No te puedes mover hacia abajo
          || this._rush.body.touching.down;//Colisionas por debajo
     },
-    //Detección de si puede saltar//
+    //Controlamos si la velocidad es negativa(el personaje cae)
+    isFalling: function(){       
+    return(this._rush.body.velocity.y < 0);
+    },
 
     
     //Colisión con muerte
@@ -319,6 +325,15 @@ var PlayScene = {
     checkPlayerFell: function(){
         if(this.game.physics.arcade.collide(this._rush, this.death))
             this.onPlayerFell();
+    },
+
+    modifyGravity: function(){
+    if(this.game.physics.arcade.collide(this._rush, this.gravity)){
+        this._rush.body.gravity.y = -400;
+        this._rush.angle +=180;
+    }
+    //return (this._rush.body.touching.up || this._rush.body.blocked.up);
+
     },
     //Colisión con muerte//
   
@@ -335,9 +350,14 @@ var PlayScene = {
         return movement;
     },
 
+    
+
      //Movimiento del jugador
     movement: function(point, xMin, xMax){
-        this._rush.body.velocity = point;// * this.game.time.elapseTime;
+        if (point.y !== 0)
+            this._rush.body.velocity = point;//
+        else
+            this._rush.body.velocity.x = point.x
 
         //Comrpuebo con los límites del juego
 
@@ -346,7 +366,7 @@ var PlayScene = {
 
     },
     
-
+   
     //Configura la escena al inicio
     configure: function(){
         //Start the Arcade Physics systems
@@ -354,11 +374,12 @@ var PlayScene = {
 
         this.game.physics.startSystem(Phaser.Physics.ARCADE);//Carga físicas
         this.game.stage.backgroundColor = '#a9f0ff';//Color de fondo
-        this.game.physics.arcade.enable(this._rush);
+        this.game.physics.arcade.enable(this._rush, Phaser.Physics.ARCADE);
         
-        this._rush.body.bounce.y = 0.2; //Rebota pero no se modifica nada
-        this._rush.body.gravity.y = 20000;//Gravedad
-        this._rush.body.gravity.x = 0;
+
+        //this._rush.body.bounce.y = 0.2; //Rebota pero no se modifica nada
+        this._rush.body.gravity.y = 400;//Gravedad
+       // this._rush.body.gravity.x = 0;
         this._rush.body.velocity.x = 0;
         this.game.camera.follow(this._rush,Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);//La cámara te sigue
     },
