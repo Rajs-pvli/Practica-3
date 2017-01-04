@@ -24,6 +24,8 @@ var PlayScene = {
       //Creamos a rush 'rush'  con el sprite por defecto en el 10, 10 con la animación por defecto 'rush_idle01'
       this._rush = this.game.add.sprite(10,10,'rush');
 
+      this._enemy = this.game.add.sprite(10,10,'rush');
+
       //Cargamos el tilemap en el map
       this.map =  this.game.add.tilemap('tilemap');
 
@@ -62,6 +64,11 @@ var PlayScene = {
                      Phaser.Animation.generateFrameNames('rush_jump',2,2,'',2),0,false);
       this._rush.animations.add('grab',
                      Phaser.Animation.generateFrameNames('rush_kick_a_',1,3,'',2),10,true);//Animación de agarre
+      
+    //Enemigo
+    this._enemy.animations.add('run',
+                    Phaser.Animation.generateFrameNames('rush_run',1,5,'',2),10,true);
+
       this.configure();
 
 
@@ -88,6 +95,7 @@ var PlayScene = {
         this.game.physics.arcade.isPaused=false;
         this.pause = false;
         this._rush.animations.paused = false;
+        this._enemy.animations.paused = false;
 
         this.buttonContinue.visible = false;
         this.buttonContinue.inputEnabled = false;
@@ -101,8 +109,12 @@ var PlayScene = {
        {
         var moveDirection = new Phaser.Point(0, 0);
         var collisionWithTilemap = this.game.physics.arcade.collide(this._rush, this.groundLayer);
+        var collisionEnemyWithTilemap = this.game.physics.arcade.collide(this._enemy, this.groundLayer);
         var movement = this.GetMovement();//Input derecha/izquierda
+        var enemyMoveDirection = new Phaser.Point(100,0);
+        var enemyMovement = Direction.RIGHT;//Iniciamos la dirección del enemigo como dir derecha
         this._rush.body.gravity.x -= this._rush.body.gravity.x *0.05;//Gravedad
+        this._enemy.body.gravity.x -= this._enemy.body.gravity.x *0.05;//Gravedad
 
 
         //Pausa
@@ -113,10 +125,31 @@ var PlayScene = {
             this.pause = true;
             this.buttonContinue.anchor.set(-2);//Anclamos el botón
             this._rush.animations.paused = true;//Paramos la animación
+            this._enemy.animations.paused = true;
             this.buttonContinue.x = this.game.camera.x;
 
         }
 
+
+
+        //Enemy state
+        if(enemyMovement === Direction.RIGHT){
+            enemyMoveDirection.x = this._speed;
+            if(this._enemy.scale.x < 0){
+                this._enemy.body.position.x = this._enemy.body.position.x -30;
+                this._enemy.scale.x *= -1;
+            }
+                
+        }
+        else if (enemyMovement === Direction.LEFT){
+            enemyMoveDirection.x = -this._speed;
+               // if(this._enemy.scale.x > 0){
+                
+                this._enemy.body.position.x = this._enemy.body.position.x +30;
+                this._enemy.scale.x *= -1; 
+            //}
+                
+            }
         //transitions
         switch(this._playerState)
         {
@@ -293,6 +326,10 @@ var PlayScene = {
         this.movement(moveDirection,50,
                       this.backgroundLayer.layer.widthInPixels*this.backgroundLayer.scale.x - 10);
 
+        this.enemyMovement(moveDirection,50,
+                      this.backgroundLayer.layer.widthInPixels*this.backgroundLayer.scale.x - 10);
+
+
         this.checkPlayerFell();//Comprueba si el jugador se ha caido
         this.modifyGravity();
     }
@@ -408,6 +445,19 @@ var PlayScene = {
             this._rush.body.velocity.x = 0;
 
     },
+
+     enemyMovement: function(point, xMin, xMax){
+        if (point.y !== 0)
+            this._enemy.body.velocity = point;//
+        else
+            this._enemy.body.velocity.x = point.x
+
+        //Comrpuebo con los límites del juego
+
+        if((this._enemy.x < xMin && point.x < 0)|| (this._enemy.x > xMax && point.x > 0))
+            this._enemy.body.velocity.x = 0;
+
+    },
     
    
     //Configura la escena al inicio
@@ -418,13 +468,16 @@ var PlayScene = {
         this.game.physics.startSystem(Phaser.Physics.ARCADE);//Carga físicas
         this.game.stage.backgroundColor = '#a9f0ff';//Color de fondo
         this.game.physics.arcade.enable(this._rush, Phaser.Physics.ARCADE);
+        this.game.physics.arcade.enable(this._enemy, Phaser.Physics.ARCADE);
         
 
         //this._rush.body.bounce.y = 0.2; //Rebota pero no se modifica nada
         this._rush.body.gravity.y = 400;//Gravedad
+        this._enemy.body.gravity.y = 400;
 
        // this._rush.body.gravity.x = 0;
         this._rush.body.velocity.x = 0;
+        this._enemy.body.velocity.x = 0;
         this.game.camera.follow(this._rush,Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);//La cámara te sigue
     },
 
@@ -436,6 +489,7 @@ var PlayScene = {
         this.backgroundLayer.destroy();
         this.map.destroy();
         this._rush.destroy();
+        this._enemy.destroy();
         this.game.world.setBounds(0,0,800,600);
 
     }
