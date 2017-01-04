@@ -6,15 +6,18 @@ var PlayerState = {'JUMP':0, 'RUN':1, 'FALLING':2, 'STOP':3, 'GRAB':4, 'UNHAND':
 var Direction = {'LEFT':0, 'RIGHT':1, 'NONE':3}
 
 var nextJump = 0;
+var nextGravityFall = 0;
+
 
 //Scena de juego.
 var PlayScene = {
     _rush: {}, //player
     _speed: 300, //velocidad del player
-    _jumpSpeed: 400, //velocidad de salto
+    _jumpSpeed: 250, //velocidad de salto
     _playerState: PlayerState.STOP, //estado del player
     _direction: Direction.NONE,  //dirección inicial del player. NONE es ninguna dirección.
 
+    gravityFall: false,
     //Método constructor...
   create: function () {
       //Creamos al player con un sprite por defecto.
@@ -99,6 +102,8 @@ var PlayScene = {
         var moveDirection = new Phaser.Point(0, 0);
         var collisionWithTilemap = this.game.physics.arcade.collide(this._rush, this.groundLayer);
         var movement = this.GetMovement();//Input derecha/izquierda
+        this._rush.body.gravity.x -= this._rush.body.gravity.x *0.05;//Gravedad
+
 
         //Pausa
         if (this.game.input.keyboard.isDown(Phaser.Keyboard.P)){           
@@ -125,6 +130,12 @@ var PlayScene = {
 
 
                 }
+                else if(this.gravityFall)
+                {
+                    this._playerState = PlayerState.FALLING;
+                    this._rush.animations.play('jump');
+                }
+
                 else{
                     if(movement !== Direction.NONE){
                         this._playerState = PlayerState.RUN;
@@ -257,15 +268,23 @@ var PlayScene = {
                 break;
 
             case PlayerState.UNHAND:
-                moveDirection.y = -this._jumpSpeed;
+                moveDirection.y = -this._jumpSpeed * 1.5;
 
                 //Caso en el que la dir de salto es izquierda
                 if (this.jumpDirection === Direction.LEFT) 
+                {
                     moveDirection.x = -this._jumpSpeed / 3 - 100 ;
+                    this._rush.body.gravity.x= -20000;//Gravedad
+
+                }
                 
                 //Caso en el que la dir de salto es derecha
                 else if (this.jumpDirection === Direction.RIGHT)
-                    moveDirection.x = this._jumpSpeed / 3 + 100;                                  
+                {
+                    moveDirection.x = this._jumpSpeed / 3 + 100;  
+                    this._rush.body.gravity.x= 20000;//Gravedad
+
+                }                                
 
                 break;
                 
@@ -306,13 +325,26 @@ var PlayScene = {
     },
 
     isStanding: function(){
+        this.gravityFall = false;
+        if (this._rush.body.gravity.y < 0)
+        {
+            return this._rush.body.blocked.up//No te puedes mover hacia abajo
+         || this._rush.body.touching.up;//Colisionas por debajo
+        }
 
+        else
+        {
         return this._rush.body.blocked.down//No te puedes mover hacia abajo
          || this._rush.body.touching.down;//Colisionas por debajo
+     }
     },
     //Controlamos si la velocidad es negativa(el personaje cae)
-    isFalling: function(){       
-    return(this._rush.body.velocity.y < 0);
+    isFalling: function(){    
+            if (this._rush.body.gravity.y > 0)
+                return(this._rush.body.velocity.y < 0);
+            else
+                 return(this._rush.body.velocity.y > 0);
+
     },
 
     
@@ -328,9 +360,20 @@ var PlayScene = {
     },
 
     modifyGravity: function(){
-    if(this.game.physics.arcade.collide(this._rush, this.gravity)){
-        this._rush.body.gravity.y = -400;
-        this._rush.angle +=180;
+
+    if(this.game.physics.arcade.collide(this._rush, this.gravity) && this.game.time.now > nextGravityFall){
+        this.gravityFall= !this.gravityFall;
+        this._rush.body.gravity.y = -this._rush.body.gravity.y;
+
+        if(this._rush.body.gravity.y < 0)
+            this._rush.body.position.y = this._rush.body.position.y +50;
+        else
+            this._rush.body.position.y = this._rush.body.position.y -50;
+
+        this._rush.scale.y *= -1; 
+        this._jumpSpeed = -this._jumpSpeed;
+        nextGravityFall = this.game.time.now + 1000;
+
     }
     //return (this._rush.body.touching.up || this._rush.body.blocked.up);
 
@@ -372,13 +415,14 @@ var PlayScene = {
         //Start the Arcade Physics systems
         this.game.world.setBounds(0, 0, 2400, 160);//Límite del mundo
 
-        this.game.physics.startSystem(Phaser.Physics.ARCADE);//Carga físicas
+        this.game.physics.startSystem(Phaser.Physics.ARCADE);//Carga físicas
         this.game.stage.backgroundColor = '#a9f0ff';//Color de fondo
         this.game.physics.arcade.enable(this._rush, Phaser.Physics.ARCADE);
         
 
         //this._rush.body.bounce.y = 0.2; //Rebota pero no se modifica nada
         this._rush.body.gravity.y = 400;//Gravedad
+
        // this._rush.body.gravity.x = 0;
         this._rush.body.velocity.x = 0;
         this.game.camera.follow(this._rush,Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);//La cámara te sigue
