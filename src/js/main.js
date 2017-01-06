@@ -24,22 +24,27 @@ var BootScene = {
 var PreloaderScene = {
   
   preload: function () {
+    //Barra de carga
     this.loadingBar = this.game.add.sprite(100,300, 'preloader_bar');//Añadimos la barra de carga
     this.loadingBar.anchor.setTo(0, 0.5);//Anclamos la barra
     this.game.load.setPreloadSprite(this.loadingBar);//Añadimos el sprite de precarga
-    this.game.stage.backgroundColor = "#000000";//Color de fondo en la escena de carga
-    this.load.onLoadStart.add(this.loadStart, this);//Nos suscribimos al evento de cuando se inicia la carga
 
-      this.game.load.tilemap('tilemap', 'images/map.json',null,Phaser.Tilemap.TILED_JSON);//Cargar el tilemap(hecho)
-      this.game.load.image('tiles', 'images/simples_pimples.png');//cargar sprites del tilemap
-      this.game.load.atlas('rush', 'images/rush_spritesheet.png','images/rush_spritesheet.json',Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);//cargar imagen personaje
+    //Color de fondo en la escena de carga
+    this.game.stage.backgroundColor = "#000000";
 
-      this.load.onLoadComplete.add(this.loadComplete, this);//Nos suscribimos al evento de cuando finaliza la carga
+    //Nos suscribimos al evento de cuando se inicia la carga
+    this.load.onLoadStart.add(this.loadStart, this);
+
+    //Cargamos sprites
+    this.game.load.tilemap('tilemap', 'images/map.json',null,Phaser.Tilemap.TILED_JSON);//Cargar el tilemap(hecho)
+    this.game.load.image('tiles', 'images/simples_pimples.png');//cargar sprites del tilemap
+    this.game.load.atlas('rush', 'images/rush_spritesheet.png','images/rush_spritesheet.json',Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);//cargar imagen personaje
+
+    this.load.onLoadComplete.add(this.loadComplete, this);//Nos suscribimos al evento de cuando finaliza la carga
   },
 
   //Evento cuando inicia carga
   loadStart: function () {
-
     console.log("Game Assets Loading ...");
   },
     
