@@ -12,18 +12,20 @@ var PlayScene =
     //Método constructor...
   create: function () 
   {
-    this.mapa = new Mapa(this, 1);
+    this.mapa = new Mapa(this.game, 1);
 
-    this.player = new Personajes(this);
+    this.player = new Personajes(this.game);
+    this.game.world.addChild(this.player);
 
     this.configure();
 
     //Creamos la pausa
-    this.pausa = new Pausa(this,this.player.getPjAnimations());
+    this.pausa = new Pausa(this.game,this.player.getPjAnimations());
   },
     
     //IS called one per frame.
-    update: function () {
+    update: function () 
+    {
         if (!this.pausa.isPaused())
         {
             var collisionWithTilemap = this.game.physics.arcade.collide(this.player.getPj(), this.mapa.getGroundLayer());
@@ -53,7 +55,8 @@ var PlayScene =
     },
 
     //Colision con gravityFall
-    modifyGravity: function(){
+    modifyGravity: function()
+    {
         if(this.game.physics.arcade.collide(this.player.getPj(), this.mapa.getGravityLayer())&& this.game.time.now > nextGravityFall)
         {
             this.player.swapGravity();
@@ -82,7 +85,8 @@ var PlayScene =
     destroy: function()
     {
         this.mapa.destroy();//Destruye todo lo referente al mapa
-        this.player.destroy();
+        this.player.destroy_();
+
         this.game.world.setBounds(0,0,800,600);
 
     }

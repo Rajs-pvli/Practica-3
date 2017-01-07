@@ -1,63 +1,63 @@
 'use strict';
 
-function BuildMap(scene,nivel)
+function BuildMap(game,nivel)
 {
-	this.scene = scene;
+	this.game = game;
 	if(nivel === 1)
 	{
 		//Cargamos el tilemap en el map
-    	this.scene.map =  scene.game.add.tilemap('tilemap');
+    	this.game.map =  game.add.tilemap('tilemap');
 
     	//Asignamos al tileset 'patrones' la imagen de sprites tiles
-    	this.scene.map.addTilesetImage('patrones','tiles');
+    	this.game.map.addTilesetImage('patrones','tiles');
 
     	//Creacion de las layers
-    	this.scene.backgroundLayer = scene.map.createLayer('BackgroundLayer');
-    	this.scene.groundLayer = scene.map.createLayer('GroundLayer');
+    	this.game.backgroundLayer = game.map.createLayer('BackgroundLayer');
+    	this.game.groundLayer = game.map.createLayer('GroundLayer');
 
     	//plano de muerte
-    	this.scene.death = scene.map.createLayer('Death');
-    	this.scene.gravity = scene.map.createLayer('Gravity');
+    	this.game.death = game.map.createLayer('Death');
+    	this.game.gravity = game.map.createLayer('Gravity');
 
 
     	//Colisiones con el plano de muerte y con el plano de muerte y con suelo.
-    	this.scene.map.setCollisionBetween(1, 5000, true, 'Death');
-    	this.scene.map.setCollisionBetween(1, 5000, true, 'GroundLayer');
-    	this.scene.map.setCollisionBetween(1,5000,true, 'Gravity');
+    	this.game.map.setCollisionBetween(1, 5000, true, 'Death');
+    	this.game.map.setCollisionBetween(1, 5000, true, 'GroundLayer');
+    	this.game.map.setCollisionBetween(1,5000,true, 'Gravity');
 
-    	this.scene.death.visible = false;
+    	this.game.death.visible = false;
 
     	//Cambia la escala a x3.
-    	this.scene.groundLayer.setScale(3,3);
-    	this.scene.backgroundLayer.setScale(3,3);
-    	this.scene.death.setScale(3,3);
-    	this.scene.gravity.setScale(3,3);
-    	//scene.groundLayer.resizeWorld(); //resize world and adjust to the screen
+    	this.game.groundLayer.setScale(3,3);
+    	this.game.backgroundLayer.setScale(3,3);
+    	this.game.death.setScale(3,3);
+    	this.game.gravity.setScale(3,3);
+    	//game.groundLayer.resizeWorld(); //resize world and adjust to the screen
 	}
 
 
-}
+};
 
 BuildMap.prototype.getGroundLayer = function()
 {
-	return this.scene.groundLayer;
-}
+	return this.game.groundLayer;
+};
 
 BuildMap.prototype.getDeathLayer = function()
 {
-	return this.scene.death;
-}
+	return this.game.death;
+};
 
 BuildMap.prototype.getGravityLayer = function()
 {
-	return this.scene.gravity;
-}
+	return this.game.gravity;
+};
 
 BuildMap.prototype.destroy = function()
 {
-	this.scene.groundLayer.destroy();
-    this.scene.backgroundLayer.destroy();
-    this.scene.map.destroy();
-}
+	this.game.groundLayer.destroy();
+    this.game.backgroundLayer.destroy();
+    this.game.map.destroy();
+};
 
 module.exports = BuildMap;
