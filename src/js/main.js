@@ -36,8 +36,10 @@ var PreloaderScene = {
     this.load.onLoadStart.add(this.loadStart, this);
 
     //Cargamos sprites
-    this.game.load.tilemap('tilemap', 'images/map.json',null,Phaser.Tilemap.TILED_JSON);//Cargar el tilemap(hecho)
-    this.game.load.image('tiles', 'images/simples_pimples.png');//cargar sprites del tilemap
+    this.game.load.tilemap('tilemap', 'images/mapa.json',null,Phaser.Tilemap.TILED_JSON);//Cargar el tilemap(hecho)
+    this.game.load.image('tiles', 'images/tiles_spritesheet.png');//cargar sprites del tilemap
+    this.game.load.image('grassTiles', 'images/sheet.png');//cargar sprites del tilemap
+    this.game.load.image('fox','images/foxy.png');
     this.game.load.atlas('rush', 'images/rush_spritesheet.png','images/rush_spritesheet.json',Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);//cargar imagen personaje
 
     this.load.onLoadComplete.add(this.loadComplete, this);//Nos suscribimos al evento de cuando finaliza la carga

@@ -4,7 +4,7 @@ function Pause (game,pausePlayer)
 {
   this.game = game;
   this.pause = false;
-  this.pauseAnimationPlayer = pausePlayer;
+  //this.pauseAnimationPlayer = pausePlayer;
   this.createButton();
 };
 
@@ -28,7 +28,7 @@ Pause.prototype.createButton = function ()
 Pause.prototype.actionOnClick = function()
 {
   this.game.physics.arcade.isPaused=false;
-  this.pauseAnimationPlayer.paused = false;
+  //this.pauseAnimationPlayer.paused = false;
 
   this.buttonContinue.visible = false;
   this.buttonContinue.inputEnabled = false;
@@ -42,9 +42,11 @@ Pause.prototype.inputPause = function()
   if (this.game.input.keyboard.isDown(Phaser.Keyboard.P))
   {        
     this.game.physics.arcade.isPaused=true;
-    this.pauseAnimationPlayer.paused = true;//Paramos la animación  
+    //this.pauseAnimationPlayer.paused = true;//Paramos la animación  
 
     this.buttonContinue.x = this.game.camera.x;
+    this.buttonContinue.y = this.game.camera.y;
+
     this.buttonContinue.visible = true;
     this.buttonContinue.inputEnabled = true;
     this.buttonContinue.anchor.set(-2);//Anclamos el botón

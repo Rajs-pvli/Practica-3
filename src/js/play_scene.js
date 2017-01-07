@@ -20,7 +20,7 @@ var PlayScene =
     this.configure();
 
     //Creamos la pausa
-    this.pausa = new Pausa(this.game,this.player.getPjAnimations());
+    this.pausa = new Pausa(this.game/*,this.player.getPjAnimations()*/);
   },
     
     //IS called one per frame.
@@ -30,7 +30,7 @@ var PlayScene =
         {
             var collisionWithTilemap = this.game.physics.arcade.collide(this.player.getPj(), this.mapa.getGroundLayer());
 
-            this.player.update();
+            this.player.update_();
 
             //Comprueba si se ha tocado el modificador de gravedad
             this.modifyGravity();
@@ -77,7 +77,7 @@ var PlayScene =
         this.game.physics.arcade.enable(this.player.getPj());
 
         //Limites de colisiones
-        this.game.world.setBounds(0, 0, 2400, 600);//Límite del mundo
+        this.game.world.setBounds(0, 0, 2400, 2100);//Límite del mundo
 
     },
     

@@ -8,8 +8,11 @@ function BuildMap(game,nivel)
 		//Cargamos el tilemap en el map
     	this.game.map =  game.add.tilemap('tilemap');
 
+
     	//Asignamos al tileset 'patrones' la imagen de sprites tiles
     	this.game.map.addTilesetImage('patrones','tiles');
+        this.game.map.addTilesetImage('sheet','grassTiles');
+
 
     	//Creacion de las layers
     	this.game.backgroundLayer = game.map.createLayer('BackgroundLayer');
@@ -25,14 +28,12 @@ function BuildMap(game,nivel)
     	this.game.map.setCollisionBetween(1, 5000, true, 'GroundLayer');
     	this.game.map.setCollisionBetween(1,5000,true, 'Gravity');
 
-    	this.game.death.visible = false;
-
     	//Cambia la escala a x3.
-    	this.game.groundLayer.setScale(3,3);
-    	this.game.backgroundLayer.setScale(3,3);
-    	this.game.death.setScale(3,3);
-    	this.game.gravity.setScale(3,3);
-    	//game.groundLayer.resizeWorld(); //resize world and adjust to the screen
+    	//this.game.groundLayer.setScale(3,3);
+    	//this.game.backgroundLayer.setScale(3,3);
+    	//this.game.death.setScale(3,3);
+    	//this.game.gravity.setScale(3,3);
+    	game.groundLayer.resizeWorld(); //resize world and adjust to the screen
 	}
 
 

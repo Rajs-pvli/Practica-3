@@ -18,17 +18,19 @@ function Player(game)
     this.gravityValue = 400;
 
 	//Creamos a rush 'rush'  con el sprite por defecto en el 10, 10 con la animación por defecto 'rush_idle01'
-    Phaser.Sprite.call(this,game,10,10,'rush');
+    Phaser.Sprite.call(this,game,200,1700,'fox');
 
 	//nombre de la animación, frames, framerate, isloop
-    this.animations.add('run',
+    /*
+    //this.animations.add('run',
                 Phaser.Animation.generateFrameNames('rush_run',1,5,'',2),10,true);
-    this.animations.add('stop',
+    //this.animations.add('stop',
                 Phaser.Animation.generateFrameNames('rush_idle',1,1,'',2),0,false);
-    this.animations.add('jump',
+    //this.animations.add('jump',
                 Phaser.Animation.generateFrameNames('rush_jump',2,2,'',2),0,false);
-    this.animations.add('grab',
+    //this.animations.add('grab',
                 Phaser.Animation.generateFrameNames('rush_kick_a_',1,3,'',2),10,true);//Animación de agarre
+*/
 
     this.game.physics.arcade.enable(this);
 
@@ -49,11 +51,10 @@ function Player(game)
 Player.prototype = Object.create(Phaser.Sprite.prototype);
 Player.constructor = Player;
 
-Player.prototype.update = function()
+Player.prototype.update_ = function()
 {
 	var moveDirection = new Phaser.Point(0, 0);
     var movement = this.GetMovement();
-    this.body.gravity.x -= this.body.gravity.x *0.05;//Gravedad
 
     //transitions
     switch(this._playerState)
@@ -63,86 +64,93 @@ Player.prototype.update = function()
             if(this.isJumping() && this.game.time.now > nextJump)
             {
                 this._playerState = PlayerState.JUMP;
-                this.animations.play('jump');
-                nextJump = this.game.time.now + 1000;
+                moveDirection.y = -this._jumpSpeed;
+                this.jump(moveDirection.y);
 
+                ////this.animations.play('jump');
+                nextJump = this.game.time.now + 1000;
             }
-            else
+            else if (this.isStanding())
             {
                 if(movement !== Direction.NONE)
                 {
                     this._playerState = PlayerState.RUN;
-                    this.animations.play('run');
+                    ////this.animations.play('run');
                 }
                 else
                 {
                     this._playerState = PlayerState.STOP;
-                    this.animations.play('stop');
+                    ////this.animations.play('stop');
                 }
             }    
+            else
+                this._playerState = PlayerState.FALLING;
             break;
                 
         case PlayerState.JUMP:
             if(this.isGrabbing())//Comprobamos si está colisionando
                 {
+                    this.body.allowGravity = false;
                     this._playerState = PlayerState.GRAB;
-                    this.animations.play('grab');
-                    this.gravityValue = this.body.gravity.y;
-
+                    //this.animations.play('grab');
                 }
 
             else
             {
-                this._playerState = (this.isFalling())
+                this._playerState = (this.isFalling() || this.isTouchingCeiling() || this.isTouchingRightOrLeft())
                 ? PlayerState.FALLING : PlayerState.JUMP;
 
-                if (this.isTouchingCeiling())
-                    this._playerState = PlayerState.FALLING;
             }
             break;
           
-                
         case PlayerState.FALLING:
             if(this.isStanding())
             {
                 if(movement !== Direction.NONE)
                 {
                     this._playerState = PlayerState.RUN;
-                    this.animations.play('run');
+                    //this.animations.play('run');
                 }
                 else
                 {
                     this._playerState = PlayerState.STOP;
-                    this.animations.play('stop');
+                    //this.animations.play('stop');
                 }
                 nextJump = 0;
 
             }
             else if(this.isGrabbing())
             {
+                this.body.allowGravity = false;
                 this._playerState = PlayerState.GRAB; 
-                this.animations.play('grab');
-                this.gravityValue = this.body.gravity.y;
-
+                //this.animations.play('grab');
             }
             break;
 
         case PlayerState.GRAB://Caso agarre
             
-                if(this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR) && this.game.time.now > nextJump){//Caso en el que salta estando agarrado                  
+                if(this.game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR) && this.game.time.now > nextJump){//Caso en el que salta estando agarrado     
+                    this.body.allowGravity = true;
+             
                     this._playerState = PlayerState.UNHAND;
-                    this.animations.play('jump');
-                    nextJump = this.game.time.now + 1000;
-                    this.body.gravity.y = this.gravityValue;
+                    //this.animations.play('jump');
+                    moveDirection.y = -this._jumpSpeed;
+                    this.jump(moveDirection.y);
 
-                    
+
+                    if(this.jumpDirection === Direction.RIGHT)
+                        this.unhandSpeed = 500;
+                    else
+                        this.unhandSpeed = -500;
+
+
+                    nextJump = this.game.time.now + 1000;                    
 
                 } 
                 else if(this.game.input.keyboard.isDown(Phaser.Keyboard.H)){//Caso en el que se suelta estando agarrado
+                    this.body.allowGravity = true;
                     this._playerState = PlayerState.FALLING;   
-                    this.animations.play('stop');
-                    this.body.gravity.y = this.gravityValue;
-
+                    //this.animations.play('stop');
                 } 
                 break; 
 
@@ -150,19 +158,16 @@ Player.prototype.update = function()
 
                 if(this.isGrabbing())//Caso en el que se agarra
                 {
+                    this.body.allowGravity = false;
                     this._playerState = PlayerState.GRAB;
-                    this.animations.play('grab');
-                    this.gravityValue = this.body.gravity.y;
-
+                    //this.animations.play('grab');
                 }
-                else 
+                else if(this.isStanding())
                 {
-                    this._playerState = (!this.isFalling())
-                    ? PlayerState.UNHAND : PlayerState.FALLING;
-
-                    if (this.isTouchingCeiling())
-                        this._playerState = PlayerState.FALLING;
+                    this._playerState = PlayerState.STOP;
                 }
+                else if(this.isTouchingRightOrLeft() || (this.jumpDirection ===Direction.RIGHT && this.unhandSpeed< 0) || (this.jumpDirection ===Direction.LEFT && this.unhandSpeed> 0))
+                    this._playerState = PlayerState.FALLING;
 
 
             break;
@@ -172,7 +177,8 @@ Player.prototype.update = function()
     switch(this._playerState)
     {       
         case PlayerState.STOP:
-            moveDirection.x = 0;
+            this.body.velocity.x = 0;
+
             break;
         case PlayerState.JUMP:
         case PlayerState.RUN:
@@ -182,7 +188,7 @@ Player.prototype.update = function()
                 moveDirection.x = this._speed;
                 if(this.scale.x < 0)
                 {
-                    this.body.position.x = this.body.position.x -30;
+                    this.body.position.x = this.body.position.x - 50;
                     this.scale.x *= -1;
                  }
             }
@@ -191,46 +197,71 @@ Player.prototype.update = function()
                 moveDirection.x = -this._speed;
                 if(this.scale.x > 0)
                 {
-                    this.body.position.x = this.body.position.x +30;
+                    this.body.position.x = this.body.position.x + 50;
                     this.scale.x *= -1; 
                 }
             }
-            if(this._playerState === PlayerState.JUMP)
-                moveDirection.y = -this._jumpSpeed;
-            else if(this._playerState === PlayerState.FALLING)
-                moveDirection.y = 0;
+            this.movement(moveDirection.x);
             break;    
 
         case PlayerState.GRAB:
-                moveDirection.y =  "grab";
+            this.body.velocity.y = 0;
+            break;
 
 
-                break;
+        case PlayerState.UNHAND:
+        //this.jumpStrength -= 0.01;
+            if(this.jumpDirection === Direction.RIGHT)
+                this.unhandSpeed = this.unhandSpeed - 2000/this.unhandSpeed;
+            else
+                this.unhandSpeed = (this.unhandSpeed - 2000/this.unhandSpeed);
 
-            case PlayerState.UNHAND:
-                moveDirection.y = -this._jumpSpeed * 1.5;
+            this.movement(this.unhandSpeed);                         
 
-                //Caso en el que la dir de salto es izquierda
-                if (this.jumpDirection === Direction.LEFT) 
-                {
-                    moveDirection.x = -this._jumpSpeed / 3 - 100 ;
-                    this.body.gravity.x= -20000;//Gravedad
-
-                }
-                
-                //Caso en el que la dir de salto es derecha
-                else if (this.jumpDirection === Direction.RIGHT)
-                {
-                    moveDirection.x = this._jumpSpeed / 3 + 100;  
-                    this.body.gravity.x= 20000;//Gravedad
-
-                }                                
-
-                break;
-        }
+            break;
+    }
 
     //Movimiento del jugador
-    this.movement(moveDirection);
+};
+
+//Obtiene el Input del jugador
+Player.prototype.GetMovement= function()
+{
+    var movement = Direction.NONE
+    //Move Right
+    if(this.game.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
+        movement = Direction.RIGHT;
+        
+    //Move Left
+    if(this.game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
+        movement = Direction.LEFT;
+        
+    return movement;
+
+};
+
+//Movimiento del jugador
+Player.prototype.movement= function(x)
+{
+    //Si no hay salto, para que afecte la gravedad
+    this.body.velocity.x =x;
+};
+
+Player.prototype.jump= function(y)
+{
+        this.body.velocity.y = y;
+
+
+};
+
+
+Player.prototype.isFalling= function(){
+    if (!this.gravityFall)
+        return(this.body.velocity.y > 0);
+    
+    else
+        return(this.body.velocity.y < 0);
+
 };
 
 //Deteccion de si el jugador salta
@@ -270,50 +301,6 @@ Player.prototype.isTouchingCeiling= function()
 
 };
 
-
-Player.prototype.isFalling= function(){
-	if (!this.gravityFall)
-    	return(this.body.velocity.y < 0);
-	
-	else
-		return(this.body.velocity.y > 0);
-
-};
-
-//Obtiene el Input del jugador
-Player.prototype.GetMovement= function()
-{
- 	var movement = Direction.NONE
-    //Move Right
-    if(this.game.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
-        movement = Direction.RIGHT;
-        
-    //Move Left
-    if(this.game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
-        movement = Direction.LEFT;
-        
-    return movement;
-
-};
-
-//Movimiento del jugador
-Player.prototype.movement= function(point)
-{
- 	//Si no hay salto, para que afecte la gravedad
-    if(point.y === 0)
-        this.body.velocity.x = point.x;
-    else if (point.y === 'grab')
-    {
-        this.body.velocity.x = 0;
-        this.body.velocity.y = 0;
-
-        this.body.gravity.y = 0;
-    }
-    else
-        this.body.velocity = point;
-
-};
-
 Player.prototype.isGrabbing= function()
 {
     //Si el personaje se agarra a la pared por la izquierda, la dir de salto es derecha
@@ -324,10 +311,13 @@ Player.prototype.isGrabbing= function()
     else if (this.body.touching.right || this.body.blocked.right)
         this.jumpDirection = Direction.LEFT;
             
-    return this.game.input.keyboard.isDown(Phaser.Keyboard.G) && 
-        ((this.body.touching.left || this.body.blocked.left) ||(this.body.touching.right || this.body.blocked.right)); 
-    
+    return this.game.input.keyboard.isDown(Phaser.Keyboard.G) &&  this.isTouchingRightOrLeft();
 };
+
+Player.prototype.isTouchingRightOrLeft = function()
+{
+    return (this.body.touching.left || this.body.blocked.left) ||(this.body.touching.right || this.body.blocked.right);
+}
 
 
 Player.prototype.swapGravity= function()
@@ -344,7 +334,7 @@ Player.prototype.swapGravity= function()
     this._jumpSpeed = -this._jumpSpeed;
 
     this._playerState = PlayerState.FALLING;
-    this.animations.play('jump');
+    //this.animations.play('jump');
 };
 
 Player.prototype.getPj = function(){
@@ -352,7 +342,7 @@ Player.prototype.getPj = function(){
 };
 
 Player.prototype.getPjAnimations = function(){
-	return this.animations;
+	//return //this.animations;
 };
 
 Player.prototype.destroy_ = function(){
