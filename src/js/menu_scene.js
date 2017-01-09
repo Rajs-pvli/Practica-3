@@ -18,8 +18,10 @@ var MenuScene = {
         buttonStart.anchor.set(0.5);//Anclamos el botón
 
         var textStart = this.game.add.text(0, 0, "Start");//Creamos el texto
-        textStart.font = 'Sniglet';//Elegimos la fuente
+        textStart.font = 'Poppins';//Elegimos la fuente
         textStart.anchor.set(0.5);//Anclamos el texto
+        //textStart.fill = '#43d637';//PODEMOS PODER COLOR ASÍ
+
         buttonStart.addChild(textStart);//Metemos el texto en el botón
     },
     

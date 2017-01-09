@@ -11,6 +11,7 @@ var GameOver = {
 
         //Texto dentro del botón
         var text = this.game.add.text(0, 0, "Reset Game");
+        text.font = 'Poppins';//Elegimos la fuente
         text.anchor.set(0.5);
         button.addChild(text);
         
@@ -23,11 +24,17 @@ var GameOver = {
 
         //Texto dentro del botón
         var text2 = this.game.add.text(0, 0, "Return menu");
+        text2.font = 'Poppins';//Elegimos la fuente
+
         text2.anchor.set(0.5);
         button2.addChild(text2);
 
           //Texto en el menú
         var goText = this.game.add.text(400, 100, "GameOver");
+        goText.font = 'Indie Flower';//Elegimos la fuente
+        goText.fontSize = 50;
+
+
         goText.anchor.set(0.5);
     },
     

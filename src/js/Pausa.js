@@ -3,6 +3,7 @@
 function Pause (game,pausePlayer) 
 {
   this.game = game;
+  this.returnMenu = false;
   this.pause = false;
   //this.pauseAnimationPlayer = pausePlayer;
   this.createButton();
@@ -11,21 +12,36 @@ function Pause (game,pausePlayer)
 Pause.prototype.createButton = function ()
 {
   this.buttonContinue = this.game.add.button(this.game.camera.x, 
-                                        this.game.camera.y + 100, 
+                                        this.game.camera.y, 
                                         'button', 
-                                        this.actionOnClick, 
+                                        this.continueOnClick, 
                                         this, 2, 0, 0);
-  var textContinue = this.game.add.text(this.buttonContinue.x + 140, this.buttonContinue.y - 20, "Continue");//Creamos el texto
-  textContinue.font = 'Sniglet';//Elegimos la fuente
+  var textContinue = this.game.add.text(this.buttonContinue.x, this.buttonContinue.y, "Continue");//Creamos el texto
+  textContinue.font = 'Poppins';//Elegimos la fuente
+  textContinue.anchor.set(0.5);//Anclamos el texto
+
   this.buttonContinue.addChild(textContinue);//Metemos el texto en el botón
-  textContinue.anchor.set(-2);//Anclamos el botón
 
   this.buttonContinue.visible = false;
   this.buttonContinue.inputEnabled = false;
+
+  this.buttonMenu = this.game.add.button(this.game.camera.x, 
+                                        this.game.camera.y, 
+                                        'buttonExit', 
+                                        this.menuOnClick, 
+                                        this, 2, 0, 0);
+  var textMenu = this.game.add.text(this.buttonMenu.x, this.buttonMenu.y, "Menu");//Creamos el texto
+  textMenu.font = 'Poppins';//Elegimos la fuente
+  textMenu.anchor.set(0.5);//Anclamos el texto
+
+  this.buttonMenu.addChild(textMenu);//Metemos el texto en el botón
+
+  this.buttonMenu.visible = false;
+  this.buttonMenu.inputEnabled = false;
 };
 
 //Cuando se pulsa el boton
-Pause.prototype.actionOnClick = function()
+Pause.prototype.continueOnClick = function()
 {
   this.game.physics.arcade.isPaused=false;
   //this.pauseAnimationPlayer.paused = false;
@@ -33,8 +49,19 @@ Pause.prototype.actionOnClick = function()
   this.buttonContinue.visible = false;
   this.buttonContinue.inputEnabled = false;
 
+    this.buttonMenu.visible = false;
+  this.buttonMenu.inputEnabled = false;
+
+
   this.pause = false;
 };
+
+//Cuando se pulsa el boton
+Pause.prototype.menuOnClick = function()
+{
+  this.returnMenu = true;
+};
+
 
 //Se llama desde el update y detecta cuando se pulsa la p para activar la Pause
 Pause.prototype.inputPause = function()
@@ -44,12 +71,20 @@ Pause.prototype.inputPause = function()
     this.game.physics.arcade.isPaused=true;
     //this.pauseAnimationPlayer.paused = true;//Paramos la animación  
 
-    this.buttonContinue.x = this.game.camera.x;
-    this.buttonContinue.y = this.game.camera.y;
+    this.buttonContinue.x = this.game.camera.x + 300;
+    this.buttonContinue.y = this.game.camera.y + 300;
 
     this.buttonContinue.visible = true;
     this.buttonContinue.inputEnabled = true;
-    this.buttonContinue.anchor.set(-2);//Anclamos el botón
+    this.buttonContinue.anchor.set(0.5);//Anclamos el botón
+
+
+    this.buttonMenu.x = this.game.camera.x + 500;
+    this.buttonMenu.y = this.game.camera.y + 300;
+
+    this.buttonMenu.visible = true;
+    this.buttonMenu.inputEnabled = true;
+    this.buttonMenu.anchor.set(0.5);//Anclamos el botón
 
     this.pause = true;
   }
@@ -61,5 +96,11 @@ Pause.prototype.isPaused = function()
 {
   return this.pause;
 };
+
+Pause.prototype.goToMenu = function()
+{
+  return this.returnMenu;
+};
+
 
 module.exports = Pause;

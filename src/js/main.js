@@ -9,9 +9,10 @@ var MenuScene = require('./menu_scene.js');
 //Carga imágenes del menu y llama al state menu
 var BootScene = {
   preload: function () {
-    //Carga
+    //Carga 
     this.game.load.image('preloader_bar', 'images/preloader_bar.png');//Barra de carga
-    this.game.load.spritesheet('button', 'images/buttons.png', 168, 70,3);//Imagen del botón
+    this.game.load.spritesheet('button', 'images/boton_azul.png', 190,46,3);//Imagen del botón
+    this.game.load.spritesheet('buttonExit', 'images/boton_naranja.png', 190,45.5,3);//Imagen del botón
     this.game.load.image('logo', 'images/phaser.png');//Imagen del logo
   },
 
@@ -40,6 +41,9 @@ var PreloaderScene = {
     this.game.load.image('tiles', 'images/tiles_spritesheet.png');//cargar sprites del tilemap
     this.game.load.image('grassTiles', 'images/sheet.png');//cargar sprites del tilemap
     this.game.load.image('fox','images/foxy.png');
+    this.game.load.image('enemy','images/enemy.png');
+    this.game.load.image('Rocket','images/cohete_off.png');
+
     this.game.load.atlas('rush', 'images/rush_spritesheet.png','images/rush_spritesheet.json',Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);//cargar imagen personaje
 
     this.load.onLoadComplete.add(this.loadComplete, this);//Nos suscribimos al evento de cuando finaliza la carga
@@ -77,7 +81,7 @@ var wfconfig = {
     
     //Tipo de fuente
     google: {
-        families: ['Sniglet']
+        families: ['Poppins','Indie Flower']//boton, titulo / game over
     }
  
 };
