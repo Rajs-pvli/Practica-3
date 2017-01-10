@@ -6,6 +6,7 @@ var Personajes = require('./Entidades.js');
 var ObjectPhysical = Objetos.ObjectPhysical;
 var Rocket = Objetos.Rocket;
 var Gem = Objetos.Gem;
+var Flag = Objetos.Flag;
 
 
 var Entity= Personajes.Entity;
@@ -47,15 +48,15 @@ function BuildMap(game)
     	//this.game.groundLayer.setScale(3,3);
 
         
-        this.player = new Personajes.Player(this.game,200,200);
+        this.player = new Personajes.Player(this.game,3570,1050);
         this.game.world.addChild(this.player);
 
-        var enemy = new Personajes.Enemy(this.game,210,700);
-        var enemy2 = new Personajes.Enemy(this.game,1400,560);
-        var enemy3 = new Personajes.Enemy(this.game,700,2060);
-        var enemy4 = new Personajes.Enemy(this.game,1610,2060);
-        var enemy5 = new Personajes.Enemy(this.game,2450,1050);
-        var enemy6 = new Personajes.Enemy(this.game,5390,1330);
+        var enemy = new Personajes.Enemy(this.game,210,750);
+        var enemy2 = new Personajes.Enemy(this.game,1700,600);
+        var enemy3 = new Personajes.Enemy(this.game,700,2000);
+        var enemy4 = new Personajes.Enemy(this.game,1610,2000);
+        var enemy5 = new Personajes.Enemy(this.game,2450,1100);
+        var enemy6 = new Personajes.Enemy(this.game,5390,1370);
 
         this.enemies = this.game.add.group();
         this.enemies.add(enemy);
@@ -68,10 +69,10 @@ function BuildMap(game)
         this.game.world.addChild(this.enemies);
 
 
-        var gemBlue = new Gem(this.game,840,140,'gemaAzul');
-        var gemGreen = new Gem(this.game,350,1680,'gemaVerde');
-        var gemRed = new Gem(this.game,6890,420,'gemaRoja');
-        var gemYellow = new Gem(this.game,6890,1330,'gemaAmarilla');
+        var gemBlue = new Gem(this.game,900,190,'gemaAzul');
+        var gemGreen = new Gem(this.game,300,1720,'gemaVerde');
+        var gemRed = new Gem(this.game,6740,480,'gemaRoja');
+        var gemYellow = new Gem(this.game,6740,1390,'gemaAmarilla');
 
         this.gems = this.game.add.group();
 
@@ -83,7 +84,7 @@ function BuildMap(game)
 
         this.currentGems = 4;
 
-        this.rocket = new Objetos.Rocket(this.game,400,200); 
+        this.rocket = new Objetos.Rocket(this.game,3570,330); 
         this.game.world.addChild(this.rocket);
 
         //Texto en el menú
@@ -103,7 +104,7 @@ function BuildMap(game)
     else if(this.game.currentLevel === 2)
     {
           //Cargamos el tilemap en el map
-        this.game.map =  game.add.tilemap('tilemapSpace');
+        this.game.map =  game.add.tilemap('mapaFinal');
 
         //Asignamos al tileset 'patrones' la imagen de sprites tiles
         //patrones es lo de tiled y tiles, el nombre que tu le das en el main
@@ -111,7 +112,7 @@ function BuildMap(game)
         this.game.map.addTilesetImage('back','background');
 
         //Creacion de las layers
-        this.game.backgroundLayer = game.map.createLayer('fondo');
+        this.game.backgroundLayer = game.map.createLayer('BackgroundLayer');
         this.game.groundLayer = game.map.createLayer('GroundLayer');
         this.game.trigger = game.map.createLayer('Trigger');
         this.game.trigger.visible = false;
@@ -131,14 +132,17 @@ function BuildMap(game)
         this.game.world.setBounds(0, 0, this.game.map.widthInPixels, this.game.map.heightInPixels);//Límite del mundo
 
 
-        this.player = new Personajes.Player(this.game, 300,14500);
-        var enemy = new Personajes.Enemy(this.game,600,300);
-        var enemy2 = new Personajes.Enemy(this.game,2000,400);
+        this.player = new Personajes.Player(this.game, 200,1700);
+        var enemy = new Personajes.Enemy(this.game,800,1800);
+        //var enemy2 = new Personajes.Enemy(this.game,2000,400);
 
 
         this.enemies = this.game.add.group();
         this.enemies.add(enemy);
-        this.enemies.add(enemy2);
+        //this.enemies.add(enemy2);
+
+        this.flag = new Objetos.Flag(this.game,6150,1610);
+        this.game.world.addChild(this.flag);
 
 
         this.game.world.addChild(this.player);

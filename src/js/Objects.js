@@ -17,6 +17,7 @@ PhysicalObject.constructor = PhysicalObject;
 function Rocket(game,posX,posY)
 {
     PhysicalObject.call(this,game,posX,posY,'Rocket');
+    this.body.immovable = true;
 }
 
 Rocket.prototype = Object.create(PhysicalObject.prototype);//Ajustamos el prototipo
@@ -33,9 +34,9 @@ Gem.prototype = Object.create(PhysicalObject.prototype);//Ajustamos el prototipo
 Gem.constructor = Gem;
 ///////////////ROCKET///////////////////////
 
-function Flag(game,posX,posY,color)
+function Flag(game,posX,posY)
 {
-    PhysicalObject.call(this,game,posX,posY,'Flag');
+    PhysicalObject.call(this,game,posX,posY,'flag');
 }
 
 Flag.prototype = Object.create(PhysicalObject.prototype);//Ajustamos el prototipo

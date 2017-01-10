@@ -67,7 +67,7 @@ Entity.prototype.isTouchingLeft = function()
 
 function Enemy(game,posX,posY){
 
-    Entity.call(this,game,400,Direction.LEFT,posX, posY,'enemy');
+    Entity.call(this,game,100,Direction.LEFT,posX, posY,'enemy');
 };
 
 Enemy.prototype = Object.create(Entity.prototype);//Ajustamos el prototipo

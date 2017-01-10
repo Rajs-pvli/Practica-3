@@ -82,10 +82,39 @@ var PreloaderScene = {
       ////////////////DESTRUIR CACHE/////////
 
       //MAPA
-      this.game.load.tilemap('tilemapSpace', 'images/spaceLevel.json',null,Phaser.Tilemap.TILED_JSON);//Cargar el tilemap(hecho)
+      this.game.load.tilemap('mapaFinal', 'images/mapafinal.json',null,Phaser.Tilemap.TILED_JSON);//Cargar el tilemap(hecho)
       
       //TILES
       this.game.load.image('background', 'images/back.png');//cargar sprites del tilemap
+
+      this.game.load.image('flag', 'images/flagRed.png');//cargar sprites del tilemap
+
+    }
+
+    else if(this.game.currentLevel === 3)
+    {
+       /////////////DESTRUIR CACHE/////////////
+      //MAPA
+      this.game.cache.removeTilemap('mapaFinal');
+
+      //TILES
+      this.game.cache.removeImage('tiles');
+
+      //PERSONAJES
+      this.game.cache.removeImage('fox');
+      this.game.cache.removeImage('enemy');
+
+      //OBJETOS
+      this.game.cache.removeImage('flag');
+
+      //IMAGENES DEL PRELOADER
+      this.game.cache.removeImage('preloader_bar');
+      this.game.cache.removeImage('backPreloader_bar');
+      this.game.cache.removeImage('logo');
+
+
+      ////////////////DESTRUIR CACHE/////////
+      this.game.state.start('menu');
     }
 
     //this.game.load.atlas('rush', 'images/rush_spritesheet.png','images/rush_spritesheet.json',Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);//cargar imagen personaje

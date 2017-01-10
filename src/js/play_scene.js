@@ -32,7 +32,7 @@ var PlayScene =
             //COLISION ENEMIGOS - TRIGGERS
             this.mapa.enemies.forEach(function(enemy) 
             {
-                this.game.physics.arcade.collide(this.mapa.enemy, this.mapa.getTriggerLayer());
+                this.game.physics.arcade.collide(enemy, this.mapa.getTriggerLayer());
             }.bind(this));
 
             this.mapa.update_();
@@ -42,17 +42,23 @@ var PlayScene =
             this.checkPlayerDeath();
 
             //COLISION JUGADOR - COHETE
-            if (this.game.currentLevel === 1)
-                this.checkFinalLevel();
-      
             //COLISION JUGADOR - GEMAS
-            if(this.game.currentLevel === 1)
+
+            if (this.game.currentLevel === 1)
+            {
+                this.checkFinalLevel();
                 this.checkCollisionWithGem();
 
+            }
+      
             //COLISION JUGADOR - GRAVEDAD
+            //COLISION JUGADOR - BANDERA
             if (this.game.currentLevel === 2)
+            {
                 this.checkModifyGravity();
-
+                this.checkCollisionWithFlag();
+            }
+          
             //Detectar input de pausa
             this.pausa.inputPause();
         }
@@ -124,6 +130,13 @@ var PlayScene =
             nextGravityFall = this.game.time.now + 1000;
         }
 
+    },
+
+    checkCollisionWithFlag: function()
+    {
+        if(this.game.physics.arcade.collide(this.mapa.flag, this.mapa.player))
+            this.goToNextNevel();
+ 
     },
 
     //Configura la escena al inicio
