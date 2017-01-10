@@ -70,9 +70,9 @@ Entity.prototype.isTouchingLeft = function()
 /////////////////ENEMY////////////////////
 
 
-function Enemy(game){
+function Enemy(game,posX,posY){
 
-    Entity.call(this,game,400,Direction.LEFT,600, 1730,'enemy');
+    Entity.call(this,game,400,Direction.LEFT,posX, posY,'enemy');
 };
 
 Enemy.prototype = Object.create(Entity.prototype);//Ajustamos el prototipo
@@ -113,14 +113,14 @@ else if(this.isTouchingLeft()){
 
 ///////////////PLAYER///////////////////////
 
-function Player(game)
+function Player(game,posX,posY)
 {
-    Entity.call(this,game,300,Direction.NONE,200,1700,'fox');
-    this._jumpSpeed = 300; //velocidad de salto
+    Entity.call(this,game,300,Direction.NONE,posX,posY,'fox');
+    this._jumpSpeed = 350; //velocidad de salto
     this._playerState= PlayerState.STOP; //estado del player
     this.gravityFall = false;
     this.gravityValue = 400;
-    this.valueUnhandSpeed = 500;
+    this.valueUnhandSpeed = 450;
 
 	//nombre de la animación, frames, framerate, isloop
     /*
@@ -234,7 +234,7 @@ Player.prototype.update_ = function()
                     this._playerState = PlayerState.UNHAND;
                     //this.animations.play('jump');
                     moveDirection.y = -this._jumpSpeed;
-                    this.jump(moveDirection.y);
+                    this.jump(moveDirection.y / 1.3);
 
 
                     if(this.jumpDirection === Direction.RIGHT)

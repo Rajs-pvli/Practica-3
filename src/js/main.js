@@ -11,9 +11,13 @@ var BootScene = {
   preload: function () {
     //Carga 
     this.game.load.image('preloader_bar', 'images/preloader_bar.png');//Barra de carga
+    this.game.load.image('backPreloader_bar', 'images/fondoBarraCarga.png');//Barra de carga
     this.game.load.spritesheet('button', 'images/boton_azul.png', 190,46,3);//Imagen del botón
     this.game.load.spritesheet('buttonExit', 'images/boton_naranja.png', 190,45.5,3);//Imagen del botón
-    this.game.load.image('logo', 'images/phaser.png');//Imagen del logo
+    this.game.load.image('logo', 'images/fondo.png');//Imagen del logo
+
+    this.game.currentLevel = 1;
+
   },
 
   create: function () {
@@ -26,6 +30,10 @@ var PreloaderScene = {
   
   preload: function () {
     //Barra de carga
+      console.log("me destruyo");
+
+    var fondoBarraCarga = this.game.add.sprite(80,300,'backPreloader_bar');
+    fondoBarraCarga.anchor.setTo(0,0.5);
     this.loadingBar = this.game.add.sprite(100,300, 'preloader_bar');//Añadimos la barra de carga
     this.loadingBar.anchor.setTo(0, 0.5);//Anclamos la barra
     this.game.load.setPreloadSprite(this.loadingBar);//Añadimos el sprite de precarga
@@ -36,15 +44,26 @@ var PreloaderScene = {
     //Nos suscribimos al evento de cuando se inicia la carga
     this.load.onLoadStart.add(this.loadStart, this);
 
-    //Cargamos sprites
-    this.game.load.tilemap('tilemap', 'images/mapa.json',null,Phaser.Tilemap.TILED_JSON);//Cargar el tilemap(hecho)
-    this.game.load.image('tiles', 'images/tiles_spritesheet.png');//cargar sprites del tilemap
-    this.game.load.image('grassTiles', 'images/sheet.png');//cargar sprites del tilemap
-    this.game.load.image('fox','images/foxy.png');
-    this.game.load.image('enemy','images/enemy.png');
-    this.game.load.image('Rocket','images/cohete_off.png');
+    if(this.game.currentLevel === 1)
+    {
+      this.game.load.tilemap('tilemap1', 'images/mapa.json',null,Phaser.Tilemap.TILED_JSON);//Cargar el tilemap(hecho)
+      this.game.load.image('grassTiles', 'images/sheet.png');//cargar sprites del tilemap
+          //Cargamos sprites
+      this.game.load.image('fox','images/foxy.png');
+      this.game.load.image('enemy','images/enemy.png');
+      this.game.load.image('tiles', 'images/tiles_spritesheet.png');//cargar sprites del tilemap
+      this.game.load.image('Rocket','images/cohete_off.png');
+    }
 
-    this.game.load.atlas('rush', 'images/rush_spritesheet.png','images/rush_spritesheet.json',Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);//cargar imagen personaje
+    else if(this.game.currentLevel === 2)
+    {
+      this.game.load.tilemap('tilemap2', 'images/mapa2.json',null,Phaser.Tilemap.TILED_JSON);//Cargar el tilemap(hecho)
+      this.game.load.image('spaceTiles', 'images/sheet_space.png');//cargar sprites del tilemap
+      this.game.load.image('background', 'images/back.png');//cargar sprites del tilemap
+
+    }
+
+    //this.game.load.atlas('rush', 'images/rush_spritesheet.png','images/rush_spritesheet.json',Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);//cargar imagen personaje
 
     this.load.onLoadComplete.add(this.loadComplete, this);//Nos suscribimos al evento de cuando finaliza la carga
   },

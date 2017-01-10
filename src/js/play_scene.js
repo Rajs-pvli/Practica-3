@@ -13,11 +13,14 @@ var PlayScene =
     //Método constructor...
   create: function () 
   {
-    this.mapa = new Mapa(this.game, 1);
-
+    if(this.game.currentLevel === 1)
+        this.mapa = new Mapa(this.game, 1);
+     
     
-    this.configure();
+    else if (this.game.currentLevel === 2)
+        this.mapa = new Mapa(this.game, 2);
 
+    this.configure();
     //Creamos la pausa
     this.pausa = new Pausa(this.game/*,this.player.getPjAnimations()*/);
   },
@@ -27,18 +30,21 @@ var PlayScene =
     {
         if (!this.pausa.isPaused())
         {
-            if (this.game.physics.arcade.collide(this.mapa.player.getEntity(), this.mapa.getGroundLayer()))
-                console.log("hola");
+            this.game.physics.arcade.collide(this.mapa.player.getEntity(), this.mapa.getGroundLayer());
             this.game.physics.arcade.collide(this.mapa.enemy.getEntity(), this.mapa.getTriggerLayer());
-            this.game.physics.arcade.collide(this.mapa.player.getEntity(), this.mapa.rocket.getRocket(),this.mapa.rocket.move());
-
+         
             this.mapa.update_();
+
+
 
             //Comprueba si se ha tocado el modificador de gravedad
             this.modifyGravity();
 
             //Comprueba si el personaje se ha chocado con el enemigo o la capa death
             this.checkPlayerDeath();
+
+               if(this.game.currentLevel === 1 && this.game.physics.arcade.collide(this.mapa.player.getEntity(), this.mapa.rocket.getRocket()))
+                this.goToNextNevel();
 
             //Detectar input de pausa
             this.pausa.inputPause();
@@ -65,8 +71,11 @@ var PlayScene =
         //Comprueba si el jugador ha muerto por colision con la capa muerte o con el enemigo
     goToNextNevel: function()
     {
-        //this.game.state.start('gameOver');
-        //this.destroy();
+        this.game.currentLevel = 2;
+        this.destroy();
+        this.game.state.start('preloader');
+
+        //DESTRUIR RECURSOS DEL NIVEL 1
         
     },
 
