@@ -30,7 +30,6 @@ var PreloaderScene = {
   
   preload: function () {
     //Barra de carga
-      console.log("me destruyo");
 
     var fondoBarraCarga = this.game.add.sprite(80,300,'backPreloader_bar');
     fondoBarraCarga.anchor.setTo(0,0.5);
@@ -46,21 +45,47 @@ var PreloaderScene = {
 
     if(this.game.currentLevel === 1)
     {
+      //MAPA
       this.game.load.tilemap('tilemap1', 'images/mapa.json',null,Phaser.Tilemap.TILED_JSON);//Cargar el tilemap(hecho)
-      this.game.load.image('grassTiles', 'images/sheet.png');//cargar sprites del tilemap
-          //Cargamos sprites
+      
+      //PERSONAJES
       this.game.load.image('fox','images/foxy.png');
       this.game.load.image('enemy','images/enemy.png');
+
+      //TILES
+      this.game.load.image('grassTiles', 'images/sheet.png');//cargar sprites del tilemap
       this.game.load.image('tiles', 'images/tiles_spritesheet.png');//cargar sprites del tilemap
+
+      //OBJETOS
+      this.game.load.image('gemaAzul','images/gemBlue.png');
+      this.game.load.image('gemaRoja','images/gemRed.png');
+      this.game.load.image('gemaAmarilla','images/gemYellow.png');
+      this.game.load.image('gemaVerde','images/gemGreen.png');
       this.game.load.image('Rocket','images/cohete_off.png');
     }
 
     else if(this.game.currentLevel === 2)
     {
-      this.game.load.tilemap('tilemap2', 'images/mapa2.json',null,Phaser.Tilemap.TILED_JSON);//Cargar el tilemap(hecho)
-      this.game.load.image('spaceTiles', 'images/sheet_space.png');//cargar sprites del tilemap
-      this.game.load.image('background', 'images/back.png');//cargar sprites del tilemap
+      /////////////DESTRUIR CACHE/////////////
+      //MAPA
+      this.game.cache.removeTilemap('tilemap1');
 
+      //TILES
+      this.game.cache.removeImage('grassTiles');
+
+      //OBJETOS
+      this.game.cache.removeImage('Rocket');
+      this.game.cache.removeImage('gemaRoja');
+      this.game.cache.removeImage('gemaAmarilla');
+      this.game.cache.removeImage('gemaAzul');
+      this.game.cache.removeImage('gemaVerde');
+      ////////////////DESTRUIR CACHE/////////
+
+      //MAPA
+      this.game.load.tilemap('tilemapSpace', 'images/spaceLevel.json',null,Phaser.Tilemap.TILED_JSON);//Cargar el tilemap(hecho)
+      
+      //TILES
+      this.game.load.image('background', 'images/back.png');//cargar sprites del tilemap
     }
 
     //this.game.load.atlas('rush', 'images/rush_spritesheet.png','images/rush_spritesheet.json',Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);//cargar imagen personaje
@@ -80,7 +105,7 @@ var PreloaderScene = {
   },
 
   //Esto debería avanzar la barra de carga
-  update: function(){//Aqui faltan cosas
+  update: function(){
       this._loadingBar
   }
 };

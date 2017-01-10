@@ -49,7 +49,7 @@ Pause.prototype.continueOnClick = function()
   this.buttonContinue.visible = false;
   this.buttonContinue.inputEnabled = false;
 
-    this.buttonMenu.visible = false;
+  this.buttonMenu.visible = false;
   this.buttonMenu.inputEnabled = false;
 
 

@@ -17,7 +17,7 @@ var GameOver = {
         
         //Botón vuelta al menu
         var button2 = this.game.add.button(500, 300, 
-                                          'button', 
+                                          'buttonExit', 
                                           this.returnMainMenu, 
                                           this, 2, 1, 0);
         button2.anchor.set(0.5);
@@ -34,11 +34,9 @@ var GameOver = {
         goText.font = 'Indie Flower';//Elegimos la fuente
         goText.fontSize = 50;
 
-
         goText.anchor.set(0.5);
     },
     
-
     actionOnClick: function()
     {
         this.game.state.start('play');

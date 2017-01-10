@@ -1,42 +1,44 @@
 'use strict';
 
+function PhysicalObject(game,posX,posY,nombreImagen)
+{
+    this.game = game;
+    Phaser.Sprite.call(this,game,posX,posY,nombreImagen);
+    this.anchor.x = 0.5;
+    this.anchor.y = 0.5;
+    this.game.physics.arcade.enable(this);
+}
+
+PhysicalObject.prototype = Object.create(Phaser.Sprite.prototype);//Ajustamos el prototipo
+PhysicalObject.constructor = PhysicalObject;
+
+
 ///////////////ROCKET///////////////////////
 function Rocket(game,posX,posY)
 {
-    this.game = game;
-    Phaser.Sprite.call(this,game,posX,posY,'Rocket');
-    this.anchor.x = 0.5;
-    this.anchor.y = 0.5;
-    this.game.physics.arcade.enable(this);
-
+    PhysicalObject.call(this,game,posX,posY,'Rocket');
 }
-Rocket.prototype = Object.create(Phaser.Sprite.prototype);//Ajustamos el prototipo
+
+Rocket.prototype = Object.create(PhysicalObject.prototype);//Ajustamos el prototipo
 Rocket.constructor = Rocket;
-
-Rocket.prototype.getRocket = function(){
-    return this;
-};
-
-//Obtiene el Input del jugador
-Rocket.prototype.move= function()
-{
-  this.body.velocity.y = 200;
-
-};
-
 ///////////////ROCKET///////////////////////
 
 ///////////////COLLECTABLE///////////////////////
-function Collectable(game,posX,posY)
+function Gem(game,posX,posY,color)
 {
-    this.game = game;
-    Phaser.Sprite.call(this,game,posX,posY,'Collectable');
-    this.anchor.x = 0.5;
-    this.anchor.y = 0.5;
-    this.game.physics.arcade.enable(this);
-
+    PhysicalObject.call(this,game,posX,posY,color);
 }
-Collectable.prototype = Object.create(Phaser.Sprite.prototype);//Ajustamos el prototipo
-Collectable.constructor = Collectable;
+
+Gem.prototype = Object.create(PhysicalObject.prototype);//Ajustamos el prototipo
+Gem.constructor = Gem;
 ///////////////ROCKET///////////////////////
-module.exports = {Rocket: Rocket, Collectable: Collectable};
+
+function Flag(game,posX,posY,color)
+{
+    PhysicalObject.call(this,game,posX,posY,'Flag');
+}
+
+Flag.prototype = Object.create(PhysicalObject.prototype);//Ajustamos el prototipo
+Flag.constructor = Flag;
+
+module.exports = {PhysicalObject: PhysicalObject, Rocket: Rocket, Gem: Gem,Flag: Flag};

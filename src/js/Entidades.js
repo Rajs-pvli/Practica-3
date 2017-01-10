@@ -27,18 +27,14 @@ Entity.constructor = Entity;
 Entity.prototype.changeDirectionLeft= function()
 {
     if(this.scale.x > 0)
-    {
         this.scale.x *= -1; 
-    }
-
+    
 };
 
 Entity.prototype.changeDirectionRight= function()
 {
     if(this.scale.x < 0)
-    {
         this.scale.x *= -1; 
-    }
 
 };
 
@@ -48,7 +44,6 @@ Entity.prototype.getEntity = function(){
 
 Entity.prototype.movement= function(x)
 {
-    //Si no hay salto, para que afecte la gravedad
     this.body.velocity.x =x;
 };
 
