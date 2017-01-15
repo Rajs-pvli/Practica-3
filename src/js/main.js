@@ -114,7 +114,7 @@ var PreloaderScene = {
 
 
       ////////////////DESTRUIR CACHE/////////
-      this.game.state.start('menu');
+      this.game.state.start('boot');
     }
 
     //this.game.load.atlas('rush', 'images/rush_spritesheet.png','images/rush_spritesheet.json',Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);//cargar imagen personaje

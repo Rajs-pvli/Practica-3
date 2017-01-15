@@ -78,11 +78,11 @@ Enemy.prototype.updateEnemy_ = function(){
 var moveDirection = new Phaser.Point(0, 0);
 if(this._direction === Direction.RIGHT){
     moveDirection.x = this._speed;
-    this.changeDirectionRight();
+    this.changeDirectionLeft();
 }
 else if (this._direction === Direction.LEFT){
     moveDirection.x = -this._speed;
-    this.changeDirectionLeft();
+    this.changeDirectionRight();
 
 }
 this.changeDirectionEnemy();
@@ -296,17 +296,16 @@ Player.prototype.update_ = function()
 
 
         case PlayerState.UNHAND:
-        //this.jumpStrength -= 0.01;
             if(this.jumpDirection === Direction.RIGHT)
             {
                 this.unhandSpeed = this.unhandSpeed - 2000/this.unhandSpeed;
-                this.changeDirectionLeft();
+                this.changeDirectionRight();
 
             }
             else
             {
                 this.unhandSpeed = (this.unhandSpeed - 2000/this.unhandSpeed);
-                this.changeDirectionRight();
+                this.changeDirectionLeft();
             }
 
             this.movement(this.unhandSpeed);                         

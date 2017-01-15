@@ -68,11 +68,18 @@ function BuildMap(game)
 
         this.game.world.addChild(this.enemies);
 
-
+/*
         var gemBlue = new Gem(this.game,900,190,'gemaAzul');
         var gemGreen = new Gem(this.game,300,1720,'gemaVerde');
         var gemRed = new Gem(this.game,6740,480,'gemaRoja');
         var gemYellow = new Gem(this.game,6740,1390,'gemaAmarilla');
+        */
+
+        
+        var gemBlue = new Gem(this.game,3570,1050,'gemaAzul');
+        var gemGreen = new Gem(this.game,3570,1050,'gemaVerde');
+        var gemRed = new Gem(this.game,3570,1050,'gemaRoja');
+        var gemYellow = new Gem(this.game,3570,1050,'gemaAmarilla');
 
         this.gems = this.game.add.group();
 
