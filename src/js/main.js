@@ -64,6 +64,9 @@ var PreloaderScene = {
       this.game.load.image('gemaAmarilla','images/gemYellow.png');
       this.game.load.image('gemaVerde','images/gemGreen.png');
       this.game.load.image('Rocket','images/cohete_off.png');
+      this.game.load.image('RocketOn','images/cohete_on.png');
+      //this.game.load.image('RocketOn','images/cohetes.png',110,246);
+
     }
 
     else if(this.game.currentLevel === 2)

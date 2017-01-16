@@ -18,6 +18,8 @@ function Rocket(game,posX,posY)
 {
     PhysicalObject.call(this,game,posX,posY,'Rocket');
     this.body.immovable = true;
+    //this.animations.add('idle',[0],1,false);
+    //this.animations.add('takingOff',[1],1,false);
 }
 
 Rocket.prototype = Object.create(PhysicalObject.prototype);//Ajustamos el prototipo

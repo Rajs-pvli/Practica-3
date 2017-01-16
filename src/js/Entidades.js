@@ -154,6 +154,10 @@ Player.prototype.update_ = function()
         case PlayerState.RUN:
             if(this.isJumping() && this.game.time.now > nextJump)
             {
+                //this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.SPACEBAR);
+                // this.game.input.keyboard.reset();
+               //  this.game.input.enabled = false;
+
                 this._playerState = PlayerState.JUMP;
                 moveDirection.y = -this._jumpSpeed;
                 this.jump(moveDirection.y);
@@ -337,6 +341,8 @@ Player.prototype.GetMovement= function()
     //Move Left
     if(this.game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
         movement = Direction.LEFT;
+
+
         
     return movement;
 
@@ -366,10 +372,11 @@ Player.prototype.isJumping = function()
 
 Player.prototype.isStanding= function()
 {
-	if (!this.gravityFall)
+	if (!this.gravityFall && this.body.blocked.down || this.body.touching.down)
 	{
-   		return this.body.blocked.down//No te puedes mover hacia abajo
-         || this.body.touching.down;//Colisionas por debajo
+        //this.game.input.enabled = true;
+
+   		return true;
     }
     else
     {

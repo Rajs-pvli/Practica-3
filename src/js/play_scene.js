@@ -29,6 +29,7 @@ var PlayScene =
             //COLISION JUGADOR - TILES
             this.game.physics.arcade.collide(this.mapa.player, this.mapa.getGroundLayer());
 
+
             //COLISION ENEMIGOS - TRIGGERS
             this.mapa.enemies.forEach(function(enemy) 
             {
@@ -108,7 +109,21 @@ var PlayScene =
     {
          if(this.game.physics.arcade.collide(this.mapa.player, this.mapa.rocket) 
             && this.mapa.currentGems === 0)
-                this.goToNextNevel();
+         {
+            var timer = this.game.time.create(false);
+            this.mapa.player.visible = false;
+            this.mapa.rocket.visible=false;
+            var rocket2 = this.game.add.sprite(3500,270, 'RocketOn');
+            this.game.physics.enable(rocket2, Phaser.Physics.ARCADE);
+            rocket2.body.velocity.y = -100;
+
+  
+            
+            this.mapa.rocket.body.velocity.y = -100;
+        //  Set a TimerEvent to occur after 3 seconds
+            timer.add(3000, this.goToNextNevel, this);
+            timer.start();
+        }
             
     },
 
