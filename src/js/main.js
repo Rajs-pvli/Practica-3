@@ -49,12 +49,14 @@ var PreloaderScene = {
       this.game.load.tilemap('tilemap1', 'images/mapa.json',null,Phaser.Tilemap.TILED_JSON);//Cargar el tilemap(hecho)
       
       //PERSONAJES
-      this.game.load.image('fox','images/foxy.png');
+      this.game.load.spritesheet('fox','images/foxSpriteSheet.png',56,80);
       this.game.load.image('enemy','images/enemy.png');
 
       //TILES
       this.game.load.image('grassTiles', 'images/sheet.png');//cargar sprites del tilemap
       this.game.load.image('tiles', 'images/tiles_spritesheet.png');//cargar sprites del tilemap
+      this.game.load.image('fondo', 'images/background.png');//cargar sprites del tilemap
+
 
       //OBJETOS
       this.game.load.image('gemaAzul','images/gemBlue.png');
@@ -117,7 +119,6 @@ var PreloaderScene = {
       this.game.state.start('boot');
     }
 
-    //this.game.load.atlas('rush', 'images/rush_spritesheet.png','images/rush_spritesheet.json',Phaser.Loader.TEXTURE_ATLAS_JSON_HASH);//cargar imagen personaje
 
     this.load.onLoadComplete.add(this.loadComplete, this);//Nos suscribimos al evento de cuando finaliza la carga
   },

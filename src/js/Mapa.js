@@ -24,14 +24,18 @@ function BuildMap(game)
 
     	//Asignamos al tileset 'patrones' la imagen de sprites tiles
         //patrones es lo de tiled y tiles, el nombre que tu le das en el main
+        this.game.map.addTilesetImage('background','fondo');
     	this.game.map.addTilesetImage('patrones','tiles');
         this.game.map.addTilesetImage('sheet','grassTiles');
 
+
     	//Creacion de las layers
+        this.game.fondo = game.map.createLayer('Fondo');
     	this.game.backgroundLayer = game.map.createLayer('BackgroundLayer');
     	this.game.groundLayer = game.map.createLayer('GroundLayer');
         this.game.trigger = game.map.createLayer('Trigger');
         this.game.trigger.visible = false;
+
 
     	//plano de muerte
     	this.game.death = game.map.createLayer('Death');
@@ -202,6 +206,7 @@ BuildMap.prototype.destroy = function()
     this.game.backgroundLayer.destroy();
     this.game.death.destroy();
     this.game.trigger.destroy();
+    this.game.fondo.destroy();
     if(this.game.currentLevel - 1=== 2)
         this.game.gravity.destroy();
 

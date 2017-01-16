@@ -2,6 +2,10 @@ var GameOver = {
     create: function () {
         console.log("Game Over");
 
+        var pj = this.game.add.sprite(370,400,'fox');
+        pj.animations.add('exhausted',[24,25,26],10,true);
+        pj.animations.play('exhausted');
+
         //Boton reset game
         var button = this.game.add.button(300, 300, 
                                           'button', 
@@ -30,9 +34,9 @@ var GameOver = {
         button2.addChild(text2);
 
           //Texto en el menú
-        var goText = this.game.add.text(400, 100, "GameOver");
+        var goText = this.game.add.text(400, 150, "GameOver");
         goText.font = 'Indie Flower';//Elegimos la fuente
-        goText.fontSize = 50;
+        goText.fontSize = 100;
 
         goText.anchor.set(0.5);
     },
