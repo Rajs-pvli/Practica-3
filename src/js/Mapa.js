@@ -95,7 +95,7 @@ function BuildMap(game)
 
         this.currentGems = 4;
 
-        this.rocket = new Objetos.Rocket(this.game,3570,330); 
+        this.rocket = new Objetos.Rocket(this.game,3570,295); 
         this.game.world.addChild(this.rocket);
 
         //Texto en el menú

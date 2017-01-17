@@ -63,9 +63,8 @@ var PreloaderScene = {
       this.game.load.image('gemaRoja','images/gemRed.png');
       this.game.load.image('gemaAmarilla','images/gemYellow.png');
       this.game.load.image('gemaVerde','images/gemGreen.png');
-      this.game.load.image('Rocket','images/cohete_off.png');
-      this.game.load.image('RocketOn','images/cohete_on.png');
-      //this.game.load.image('RocketOn','images/cohetes.png',110,246);
+      
+      this.game.load.spritesheet('Rocket','images/cohetes.png',110,246);
 
     }
 
