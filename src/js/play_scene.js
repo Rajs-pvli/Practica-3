@@ -74,22 +74,35 @@ var PlayScene =
     //Comprueba si el jugador ha muerto por colision con la capa muerte o con el enemigo
     checkPlayerDeath: function()
     {
-        var bool = false;
+        var enemyDeath = false;
+        var playerDeath = false;
         this.mapa.enemies.forEach(function(enemy) 
         {
-           if(this.game.physics.arcade.collide(enemy, this.mapa.player)) 
-                bool = true;
+            if(this.game.physics.arcade.collide(enemy, this.mapa.player))
+            {
+                if (this.checkEnemyDeath(enemy))
+                    enemyDeath = true;
+                else
+                    playerDeath = true;
+
+            }
             
         }.bind(this));
 
-        if(bool  || this.game.physics.arcade.collide(this.mapa.player, this.mapa.getDeathLayer()))
+        if(playerDeath  || this.game.physics.arcade.collide(this.mapa.player, this.mapa.getDeathLayer()))
         {
             this.game.state.start('gameOver');
             this.destroy();
         }
     },
 
-  
+  checkEnemyDeath: function(enemy){
+    if(enemy.isTouchingUp()){
+        enemy.destroy();
+        return true;
+    }
+    return false;
+  },
 
     checkCollisionWithGem: function()
     {

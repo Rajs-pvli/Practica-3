@@ -50,7 +50,7 @@ var PreloaderScene = {
       
       //PERSONAJES
       this.game.load.spritesheet('fox','images/foxSpriteSheet.png',56,80);
-      this.game.load.image('enemy','images/enemy.png');
+      this.game.load.spritesheet('enemy','images/enemy.png',77,53);
 
       //TILES
       this.game.load.image('grassTiles', 'images/sheet.png');//cargar sprites del tilemap

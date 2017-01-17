@@ -1,0 +1,21 @@
+﻿Tareas PVLI
+
+-Matar a las arañas por arriba
+
+-Escalado mapa 2
+
+-Fondo Game Over
+
+-Texto tutorial
+
+-Música
+
+-Parallax
+
+-Presentación(Programa presi(?))
+
+-Comprobación de los niveles en el Update()
+
+-Pausar las animaciones
+
+-Animación del fuego
