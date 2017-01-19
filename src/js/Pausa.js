@@ -1,11 +1,12 @@
 'use strict';
 
-function Pause (game,pausePlayer) 
+function Pause (game,pausePlayer,enem) 
 {
   this.game = game;
   this.returnMenu = false;
   this.pause = false;
-  //this.pauseAnimationPlayer = pausePlayer;
+  this.playerAnimations = pausePlayer;
+  this.enemies = enem;
   this.createButton();
 };
 
@@ -43,8 +44,13 @@ Pause.prototype.createButton = function ()
 //Cuando se pulsa el boton
 Pause.prototype.continueOnClick = function()
 {
+
   this.game.physics.arcade.isPaused=false;
-  //this.pauseAnimationPlayer.paused = false;
+  this.playerAnimations.paused = false;//Paramos la animación  
+  this.enemies.forEach(function(enemy) 
+  {
+      enemy.getAnimations().paused = false;
+  }.bind(this));
 
   this.buttonContinue.visible = false;
   this.buttonContinue.inputEnabled = false;
@@ -68,8 +74,13 @@ Pause.prototype.inputPause = function()
 {
   if (this.game.input.keyboard.isDown(Phaser.Keyboard.P))
   {        
+
     this.game.physics.arcade.isPaused=true;
-    //this.pauseAnimationPlayer.paused = true;//Paramos la animación  
+    this.playerAnimations.paused = true;//Paramos la animación  
+    this.enemies.forEach(function(enemy) 
+    {
+      enemy.getAnimations().paused = true;
+    }.bind(this));
 
     this.buttonContinue.x = this.game.camera.x + 300;
     this.buttonContinue.y = this.game.camera.y + 300;

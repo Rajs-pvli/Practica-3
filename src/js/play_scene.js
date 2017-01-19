@@ -17,7 +17,7 @@ var PlayScene =
         this.configure();
 
         //Creamos la pausa
-        this.pausa = new Pausa(this.game/*,this.player.getPjAnimations()*/);
+        this.pausa = new Pausa(this.game,this.mapa.player.getAnimations(),this.mapa.enemies );
     },
     
     //IS called one per frame.

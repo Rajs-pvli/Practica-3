@@ -2,6 +2,13 @@ var GameOver = {
     create: function () {
         console.log("Game Over");
 
+        //Añadimos sprite de fondo
+
+        var fondo = this.game.add.sprite(this.game.world.centerX, 
+                                        this.game.world.centerY, 
+                                        'gameOver');
+        fondo.anchor.setTo(0.5, 0.5);//Anclamos el fondo
+
         var pj = this.game.add.sprite(370,400,'fox');
         pj.animations.add('exhausted',[24,25,26],10,true);
         pj.animations.play('exhausted');
@@ -37,6 +44,8 @@ var GameOver = {
         var goText = this.game.add.text(400, 150, "GameOver");
         goText.font = 'Indie Flower';//Elegimos la fuente
         goText.fontSize = 100;
+        goText.fill = '#FFA500';
+
 
         goText.anchor.set(0.5);
     },

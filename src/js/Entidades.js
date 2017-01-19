@@ -57,6 +57,9 @@ Entity.prototype.isTouchingLeft = function()
     return (this.body.touching.left || this.body.blocked.left);
 }
 
+Entity.prototype.getAnimations = function(){
+    return this.animations;
+};
  ////////////ENTITY////////////////////////
 
 
@@ -76,40 +79,37 @@ function Enemy(game,posX,posY){
 Enemy.prototype = Object.create(Entity.prototype);//Ajustamos el prototipo
 Enemy.constructor = Enemy;
 
-Enemy.prototype.updateEnemy_ = function(){
+Enemy.prototype.updateEnemy_ = function()
+{
+    var moveDirection = new Phaser.Point(0, 0);
+    if(this._direction === Direction.RIGHT){
+        moveDirection.x = this._speed;
+        this.changeDirectionLeft();
+    }
+    else if (this._direction === Direction.LEFT){
+        moveDirection.x = -this._speed;
+        this.changeDirectionRight();
+    }
 
-var moveDirection = new Phaser.Point(0, 0);
-if(this._direction === Direction.RIGHT){
-    moveDirection.x = this._speed;
-    this.changeDirectionLeft();
-}
-else if (this._direction === Direction.LEFT){
-    moveDirection.x = -this._speed;
-    this.changeDirectionRight();
-
-}
-this.changeDirectionEnemy();
-this.movement(moveDirection.x);
+    this.changeDirectionEnemy();
+    this.movement(moveDirection.x);
 
 };
 
-
 Enemy.prototype.changeDirectionEnemy = function(){//Cambia la dirección al chocar una pared
-if(this.isTouchingRight()){
-    
-    this._direction = Direction.LEFT;
-}
-else if(this.isTouchingLeft()){
-    
-    this._direction = Direction.RIGHT;
-}
-//this.scale.x *= -1;
-}
+    if(this.isTouchingRight())
+        this._direction = Direction.LEFT;
+
+
+    else if(this.isTouchingLeft())
+        this._direction = Direction.RIGHT;
+
+};
 
 Enemy.prototype.isTouchingUp = function()
 {
     return (this.body.touching.up || this.body.blocked.up);
-}
+};
 
 /////////////////ENEMY////////////////////
 
@@ -119,7 +119,7 @@ Enemy.prototype.isTouchingUp = function()
 function Player(game,posX,posY)
 {
     Entity.call(this,game,400,Direction.NONE,posX,posY,'fox');
-    this._jumpSpeed = 600; //velocidad de salto
+    this._jumpSpeed = 630; //velocidad de salto
     this._playerState= PlayerState.STOP; //estado del player
     this.gravityFall = false;
     this.gravityValue = 900;
@@ -162,10 +162,6 @@ Player.prototype.update_ = function()
         case PlayerState.RUN:
             if(this.isJumping() && this.game.time.now > nextJump)
             {
-                //this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.SPACEBAR);
-                // this.game.input.keyboard.reset();
-               //  this.game.input.enabled = false;
-
                 this._playerState = PlayerState.JUMP;
                 moveDirection.y = -this._jumpSpeed;
                 this.jump(moveDirection.y);
@@ -382,8 +378,6 @@ Player.prototype.isStanding= function()
 {
 	if (!this.gravityFall && this.body.blocked.down || this.body.touching.down)
 	{
-        //this.game.input.enabled = true;
-
    		return true;
     }
     else
@@ -436,9 +430,7 @@ Player.prototype.swapGravity= function()
 
 };
 
-Player.prototype.getPjAnimations = function(){
-	//return //this.animations;
-};
+
 
 ///////////////PLAYER///////////////////////
 

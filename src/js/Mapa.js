@@ -47,10 +47,6 @@ function BuildMap(game)
 
         //Limites de colisiones
         this.game.world.setBounds(0, 0, this.game.map.widthInPixels, this.game.map.heightInPixels);//Límite del mundo
-
-    	//Cambia la escala a x3.
-    	//this.game.groundLayer.setScale(3,3);
-
         
         this.player = new Personajes.Player(this.game,3570,1050);
         this.game.world.addChild(this.player);
@@ -98,7 +94,7 @@ function BuildMap(game)
         this.rocket = new Objetos.Rocket(this.game,3570,295); 
         this.game.world.addChild(this.rocket);
 
-        //Texto en el menú
+        //Texto tutorial
         var goText = this.game.add.text(400, 100, "GameOver");
         goText.font = 'Indie Flower';//Elegimos la fuente
         goText.fontSize = 50;
@@ -109,7 +105,9 @@ function BuildMap(game)
 
         goText.anchor.set(0.5);
 
-    
+        this.musica = this.game.add.audio('musica1');
+        this.musica.loop = true;
+        this.musica.play();
     }
 
     else if(this.game.currentLevel === 2)
@@ -143,7 +141,7 @@ function BuildMap(game)
         this.game.world.setBounds(0, 0, this.game.map.widthInPixels, this.game.map.heightInPixels);//Límite del mundo
 
 
-        this.player = new Personajes.Player(this.game, 200,1700);
+        this.player = new Personajes.Player(this.game, 140,9660);
         var enemy = new Personajes.Enemy(this.game,800,1800);
         //var enemy2 = new Personajes.Enemy(this.game,2000,400);
 
@@ -152,12 +150,16 @@ function BuildMap(game)
         this.enemies.add(enemy);
         //this.enemies.add(enemy2);
 
-        this.flag = new Objetos.Flag(this.game,6150,1610);
+        this.flag = new Objetos.Flag(this.game,260,9660);
         this.game.world.addChild(this.flag);
 
 
         this.game.world.addChild(this.player);
         this.game.world.addChild(this.enemies);
+
+        this.musica = this.game.add.audio('musica1');
+        this.musica.loop = true;
+        this.musica.play();
 
 
     }
@@ -212,6 +214,8 @@ BuildMap.prototype.destroy = function()
 
     //MAPA
     this.game.map.destroy();
+
+    this.musica.destroy();
 };
 
 module.exports = BuildMap;

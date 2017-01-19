@@ -4,6 +4,7 @@
 var PlayScene = require('./play_scene.js');
 var GameOverScene = require('./gameover_scene.js');
 var MenuScene = require('./menu_scene.js');
+var FinalScene = require('./final_scene.js');
 
 
 //Carga imágenes del menu y llama al state menu
@@ -14,7 +15,7 @@ var BootScene = {
     this.game.load.image('backPreloader_bar', 'images/fondoBarraCarga.png');//Barra de carga
     this.game.load.spritesheet('button', 'images/boton_azul.png', 190,46,3);//Imagen del botón
     this.game.load.spritesheet('buttonExit', 'images/boton_naranja.png', 190,45.5,3);//Imagen del botón
-    this.game.load.image('logo', 'images/fondo.png');//Imagen del logo
+    this.game.load.image('logo', 'images/PantallaMenu.png');//Imagen del logo
 
     this.game.currentLevel = 1;
 
@@ -45,6 +46,10 @@ var PreloaderScene = {
 
     if(this.game.currentLevel === 1)
     {
+      this.game.cache.removeImage('logo');
+
+      this.game.load.image('gameOver', 'images/cosmos.jpg');//Imagen del logo
+
       //MAPA
       this.game.load.tilemap('tilemap1', 'images/mapa.json',null,Phaser.Tilemap.TILED_JSON);//Cargar el tilemap(hecho)
       
@@ -66,6 +71,8 @@ var PreloaderScene = {
       
       this.game.load.spritesheet('Rocket','images/cohetes.png',110,246);
 
+      //SONIDO
+      this.game.load.audio('musica1','images/musica1.wav');
     }
 
     else if(this.game.currentLevel === 2)
@@ -86,7 +93,7 @@ var PreloaderScene = {
       ////////////////DESTRUIR CACHE/////////
 
       //MAPA
-      this.game.load.tilemap('mapaFinal', 'images/mapafinal.json',null,Phaser.Tilemap.TILED_JSON);//Cargar el tilemap(hecho)
+      this.game.load.tilemap('mapaFinal', 'images/mapa2.json',null,Phaser.Tilemap.TILED_JSON);//Cargar el tilemap(hecho)
       
       //TILES
       this.game.load.image('background', 'images/back.png');//cargar sprites del tilemap
@@ -111,16 +118,14 @@ var PreloaderScene = {
       //OBJETOS
       this.game.cache.removeImage('flag');
 
-      //IMAGENES DEL PRELOADER
-      this.game.cache.removeImage('preloader_bar');
-      this.game.cache.removeImage('backPreloader_bar');
-      this.game.cache.removeImage('logo');
+      this.game.cache.removeImage('gameOver');
 
-
+      this.game.load.image('fondoFinal', 'images/PantallaFinJuego.png');//Imagen del logo
       ////////////////DESTRUIR CACHE/////////
-      this.game.state.start('boot');
+
     }
 
+      console.log("hola");
 
     this.load.onLoadComplete.add(this.loadComplete, this);//Nos suscribimos al evento de cuando finaliza la carga
   },
@@ -133,6 +138,9 @@ var PreloaderScene = {
   //Evento cuando termina la carga
   loadComplete: function ()
   {
+    if (this.game.currentLevel === 3)
+      this.game.state.start('final');
+    else
       this.game.state.start('play');
   },
 
@@ -173,6 +181,8 @@ function init()
   game.state.add('preloader', PreloaderScene);
   game.state.add('play', PlayScene);
   game.state.add('gameOver', GameOverScene);
+  game.state.add('final', FinalScene);
+
 
 //iniciamos el state 'boot'
   game.state.start('boot');//Inicia el menú

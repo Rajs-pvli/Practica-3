@@ -18,9 +18,7 @@ var MenuScene = {
         buttonStart.anchor.set(0.5);//Anclamos el botón
 
         buttonStart.scale.x*= 1.5;
-       buttonStart.scale.y*= 1.5;
-
-
+        buttonStart.scale.y*= 1.5;
 
         var textStart = this.game.add.text(0, 0, "Start");//Creamos el texto
         textStart.font = 'Poppins';//Elegimos la fuente
