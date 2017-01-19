@@ -94,17 +94,6 @@ function BuildMap(game)
         this.rocket = new Objetos.Rocket(this.game,3570,295); 
         this.game.world.addChild(this.rocket);
 
-        //Texto tutorial
-        var goText = this.game.add.text(400, 100, "GameOver");
-        goText.font = 'Indie Flower';//Elegimos la fuente
-        goText.fontSize = 50;
-
-        var i = 0;
-
-        goText.visible = false;
-
-        goText.anchor.set(0.5);
-
         this.musica = this.game.add.audio('musica1');
         this.musica.loop = true;
         this.musica.play();

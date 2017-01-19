@@ -137,14 +137,14 @@ var PlayScene =
          if(this.game.physics.arcade.collide(this.mapa.player, this.mapa.rocket) 
             && this.mapa.currentGems === 0)
          {
+            this.mapa.currentGems = -1;
             this.rocketSound.play();
 
             var timer = this.game.time.create(false);
             this.mapa.player.visible = false;
-            //this.mapa.player.inputEnabled = false;
 
             this.mapa.rocket.animations.play('takingOff');   
-           // this.mapa.rocket.body.position.y += 10;
+            this.mapa.rocket.body.position.y += 50;
 
             this.mapa.rocket.body.velocity.y = -100;
 

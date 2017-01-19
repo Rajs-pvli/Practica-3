@@ -13,7 +13,7 @@ var MenuScene = {
         logo.anchor.setTo(0.5, 0.5);//Anclamos el logo
 
         //Añadimos el botón
-        var buttonStart = this.game.add.button(this.game.world.centerX - 200, 
+        var buttonStart = this.game.add.button(this.game.world.centerX  -50, 
                                                this.game.world.centerY, 
                                                'button', 
                                                this.actionOnClick, 

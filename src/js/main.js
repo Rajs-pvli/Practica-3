@@ -16,13 +16,10 @@ var BootScene = {
     this.game.load.spritesheet('button', 'images/boton_azul.png', 190,46,3);//Imagen del botón
     this.game.load.spritesheet('buttonExit', 'images/boton_naranja.png', 190,45.5,3);//Imagen del botón
     this.game.load.image('logo', 'images/PantallaMenu.png');//Imagen del logo
-    this.game.load.audio('musicaMenu','images/musicaMenu.wav');
-    this.game.load.audio('buttonSound','images/buttonSound.wav');
-
-
+    this.game.load.audio('musicaMenu','sound/musicaMenu.wav');
+    this.game.load.audio('buttonSound','sound/buttonSound.wav');
 
     this.game.currentLevel = 1;
-
   },
 
   create: function () {
@@ -35,7 +32,6 @@ var PreloaderScene = {
   
   preload: function () {
     //Barra de carga
-
     var fondoBarraCarga = this.game.add.sprite(80,300,'backPreloader_bar');
     fondoBarraCarga.anchor.setTo(0,0.5);
     this.loadingBar = this.game.add.sprite(100,300, 'preloader_bar');//Añadimos la barra de carga
@@ -55,7 +51,7 @@ var PreloaderScene = {
       this.game.load.image('gameOver', 'images/cosmos.jpg');//Imagen del logo
 
       //MAPA
-      this.game.load.tilemap('tilemap1', 'images/mapa.json',null,Phaser.Tilemap.TILED_JSON);//Cargar el tilemap(hecho)
+      this.game.load.tilemap('tilemap1', 'maps/mapa.json',null,Phaser.Tilemap.TILED_JSON);//Cargar el tilemap(hecho)
       
       //PERSONAJES
       this.game.load.spritesheet('fox','images/foxSpriteSheet.png',56,80);
@@ -76,12 +72,11 @@ var PreloaderScene = {
       this.game.load.spritesheet('Rocket','images/cohetes.png',110,246);
 
       //SONIDO
-
-      this.game.load.audio('musica1','images/musica1.wav');
-      this.game.load.audio('jumpSound','images/jumpSound.wav');
-      this.game.load.audio('spiderSound','images/spiderSound.mp3');
-      this.game.load.audio('rocketSound','images/rocketSound.mp3');
-      this.game.load.audio('gemSound','images/gemSound.wav');
+      this.game.load.audio('musica1','sound/musica1.wav');
+      this.game.load.audio('jumpSound','sound/jumpSound.wav');
+      this.game.load.audio('spiderSound','sound/spiderSound.wav');
+      this.game.load.audio('rocketSound','sound/rocketSound.mp3');
+      this.game.load.audio('gemSound','sound/gemSound.wav');
 
     }
 
@@ -103,15 +98,15 @@ var PreloaderScene = {
       ////////////////DESTRUIR CACHE/////////
 
       //MAPA
-      this.game.load.tilemap('mapaFinal', 'images/Mapa2.json',null,Phaser.Tilemap.TILED_JSON);//Cargar el tilemap(hecho)
+      this.game.load.tilemap('mapaFinal', 'maps/Mapa2.json',null,Phaser.Tilemap.TILED_JSON);//Cargar el tilemap(hecho)
       
       //TILES
       this.game.load.image('background', 'images/back.png');//cargar sprites del tilemap
 
       this.game.load.image('flag', 'images/flagRed.png');//cargar sprites del tilemap
 
-      this.game.load.audio('gravitySound','images/gravitySound.wav');
-      this.game.load.audio('musica2','images/musica2.wav');
+      this.game.load.audio('gravitySound','sound/gravitySound.wav');
+      this.game.load.audio('musica2','sound/musica2.wav');
 
     }
 

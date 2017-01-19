@@ -134,6 +134,7 @@ function Player(game,posX,posY)
     this.animations.add('grab',[19,20],30,false);//Animación de agarre
 
     this.jumpSound = this.game.add.audio('jumpSound');
+    this.jumpSound.volume = 0.5;
 
     //Gravedad del juego
     //this.body.bounce.y = 0.2;
