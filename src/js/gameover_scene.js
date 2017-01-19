@@ -1,7 +1,12 @@
 var GameOver = {
     create: function () {
         console.log("Game Over");
+        
+        this.sound = this.game.add.audio('buttonSound');
 
+        this.music = this.game.add.audio('musicaMenu');
+        this.music.play();
+        this.music.loop = true;
         //Añadimos sprite de fondo
 
         var fondo = this.game.add.sprite(this.game.world.centerX, 
@@ -52,11 +57,22 @@ var GameOver = {
     
     actionOnClick: function()
     {
+        this.sound.play();
+        this.music.destroy();
         this.game.state.start('play');
     },
 
     returnMainMenu: function()
     {
+        this.sound.play();
+        this.music.destroy();
+
+        //IMAGENES DEL PRELOADER
+        this.game.cache.removeImage('preloader_bar');
+        this.game.cache.removeImage('backPreloader_bar');
+        this.game.cache.removeImage('fondoFinal');
+        this.game.cache.removeSound('musicaMenu');//Recurso
+        
         this.game.state.start('boot');
     }
 

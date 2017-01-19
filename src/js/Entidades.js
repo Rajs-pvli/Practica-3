@@ -132,7 +132,8 @@ function Player(game,posX,posY)
     this.animations.add('fall',[8],5,false);
     this.animations.add('unhand',[21,22,23],10,false);
     this.animations.add('grab',[19,20],30,false);//Animación de agarre
-    
+
+    this.jumpSound = this.game.add.audio('jumpSound');
 
     //Gravedad del juego
     //this.body.bounce.y = 0.2;
@@ -165,6 +166,7 @@ Player.prototype.update_ = function()
                 this._playerState = PlayerState.JUMP;
                 moveDirection.y = -this._jumpSpeed;
                 this.jump(moveDirection.y);
+                this.jumpSound.play();
 
                 this.animations.play('jump');
                 nextJump = this.game.time.now + 1000;
@@ -241,6 +243,7 @@ Player.prototype.update_ = function()
              
                     this._playerState = PlayerState.UNHAND;
                     this.animations.play('unhand');
+                    this.jumpSound.play();
                     moveDirection.y = -this._jumpSpeed;
                     this.jump(moveDirection.y / 1.2);
 

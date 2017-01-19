@@ -157,7 +157,7 @@ function BuildMap(game)
         this.game.world.addChild(this.player);
         this.game.world.addChild(this.enemies);
 
-        this.musica = this.game.add.audio('musica1');
+        this.musica = this.game.add.audio('musica2');
         this.musica.loop = true;
         this.musica.play();
 
@@ -212,10 +212,11 @@ BuildMap.prototype.destroy = function()
     if(this.game.currentLevel - 1=== 2)
         this.game.gravity.destroy();
 
+    this.musica.destroy();
+
     //MAPA
     this.game.map.destroy();
 
-    this.musica.destroy();
 };
 
 module.exports = BuildMap;

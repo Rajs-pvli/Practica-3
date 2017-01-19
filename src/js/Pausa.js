@@ -7,6 +7,7 @@ function Pause (game,pausePlayer,enem)
   this.pause = false;
   this.playerAnimations = pausePlayer;
   this.enemies = enem;
+  this.sound = this.game.add.audio('buttonSound');
   this.createButton();
 };
 
@@ -44,7 +45,7 @@ Pause.prototype.createButton = function ()
 //Cuando se pulsa el boton
 Pause.prototype.continueOnClick = function()
 {
-
+  this.sound.play();
   this.game.physics.arcade.isPaused=false;
   this.playerAnimations.paused = false;//Paramos la animación  
   this.enemies.forEach(function(enemy) 
@@ -65,6 +66,7 @@ Pause.prototype.continueOnClick = function()
 //Cuando se pulsa el boton
 Pause.prototype.menuOnClick = function()
 {
+  this.sound.play();
   this.returnMenu = true;
 };
 

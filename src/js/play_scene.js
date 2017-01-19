@@ -18,6 +18,16 @@ var PlayScene =
 
         //Creamos la pausa
         this.pausa = new Pausa(this.game,this.mapa.player.getAnimations(),this.mapa.enemies );
+
+        //Sonidos
+        this.spiderSound = this.game.add.audio('spiderSound');
+        this.gemSound = this.game.add.audio('gemSound');
+        if (this.game.currentLevel === 1)
+            this.rocketSound = this.game.add.audio('rocketSound');
+
+        if (this.game.currentLevel === 2)
+            this.gravitySound = this.game.add.audio('gravitySound');
+
     },
     
     //IS called one per frame.
@@ -65,6 +75,7 @@ var PlayScene =
         }
         else if (this.pausa.goToMenu())
         {
+            this.game.cache.destroy();
             this.destroy();
             this.game.state.start('boot');
 
@@ -82,6 +93,7 @@ var PlayScene =
             {
                 if (this.checkEnemyDeath(enemy))
                     enemyDeath = true;
+                
                 else
                     playerDeath = true;
 
@@ -98,6 +110,7 @@ var PlayScene =
 
   checkEnemyDeath: function(enemy){
     if(enemy.isTouchingUp()){
+        this.spiderSound.play();
         enemy.destroy();
         return true;
     }
@@ -111,6 +124,7 @@ var PlayScene =
             var bool = this.game.physics.arcade.collide(gem, this.mapa.player)
             if (bool)
             {
+                this.gemSound.play();
                 this.mapa.currentGems--;
                 gem.destroy();
             }
@@ -123,11 +137,14 @@ var PlayScene =
          if(this.game.physics.arcade.collide(this.mapa.player, this.mapa.rocket) 
             && this.mapa.currentGems === 0)
          {
+            this.rocketSound.play();
+
             var timer = this.game.time.create(false);
             this.mapa.player.visible = false;
+            //this.mapa.player.inputEnabled = false;
 
             this.mapa.rocket.animations.play('takingOff');   
-            this.mapa.rocket.body.position.y += 10;
+           // this.mapa.rocket.body.position.y += 10;
 
             this.mapa.rocket.body.velocity.y = -100;
 
@@ -152,6 +169,7 @@ var PlayScene =
         if(this.game.physics.arcade.collide(this.mapa.player, this.mapa.getGravityLayer())&& 
             this.game.time.now > nextGravityFall)
         {
+            this.gravitySound.play();
             this.mapa.player.swapGravity();
             nextGravityFall = this.game.time.now + 1000;
         }

@@ -16,6 +16,10 @@ var BootScene = {
     this.game.load.spritesheet('button', 'images/boton_azul.png', 190,46,3);//Imagen del botón
     this.game.load.spritesheet('buttonExit', 'images/boton_naranja.png', 190,45.5,3);//Imagen del botón
     this.game.load.image('logo', 'images/PantallaMenu.png');//Imagen del logo
+    this.game.load.audio('musicaMenu','images/musicaMenu.wav');
+    this.game.load.audio('buttonSound','images/buttonSound.wav');
+
+
 
     this.game.currentLevel = 1;
 
@@ -72,7 +76,13 @@ var PreloaderScene = {
       this.game.load.spritesheet('Rocket','images/cohetes.png',110,246);
 
       //SONIDO
+
       this.game.load.audio('musica1','images/musica1.wav');
+      this.game.load.audio('jumpSound','images/jumpSound.wav');
+      this.game.load.audio('spiderSound','images/spiderSound.mp3');
+      this.game.load.audio('rocketSound','images/rocketSound.mp3');
+      this.game.load.audio('gemSound','images/gemSound.wav');
+
     }
 
     else if(this.game.currentLevel === 2)
@@ -93,12 +103,15 @@ var PreloaderScene = {
       ////////////////DESTRUIR CACHE/////////
 
       //MAPA
-      this.game.load.tilemap('mapaFinal', 'images/mapa2.json',null,Phaser.Tilemap.TILED_JSON);//Cargar el tilemap(hecho)
+      this.game.load.tilemap('mapaFinal', 'images/Mapa2.json',null,Phaser.Tilemap.TILED_JSON);//Cargar el tilemap(hecho)
       
       //TILES
       this.game.load.image('background', 'images/back.png');//cargar sprites del tilemap
 
       this.game.load.image('flag', 'images/flagRed.png');//cargar sprites del tilemap
+
+      this.game.load.audio('gravitySound','images/gravitySound.wav');
+      this.game.load.audio('musica2','images/musica2.wav');
 
     }
 
@@ -124,8 +137,6 @@ var PreloaderScene = {
       ////////////////DESTRUIR CACHE/////////
 
     }
-
-      console.log("hola");
 
     this.load.onLoadComplete.add(this.loadComplete, this);//Nos suscribimos al evento de cuando finaliza la carga
   },
