@@ -3,8 +3,11 @@
 var Pausa = require('./Pausa.js');
 var Mapa = require('./Mapa.js');
 
+
+var nextGravityFall = 0;
+
 //Scena de juego.
-var PlayScene = 
+var PlayScene2 = 
 {
     //Método constructor...
     create: function () 
@@ -14,12 +17,12 @@ var PlayScene =
         this.configure();
 
         //Creamos la pausa
-        this.pausa = new Pausa(this.game,this.mapa.player.getAnimations(),this.mapa.enemies , this.mapa.musica);
+        this.pausa = new Pausa(this.game,this.mapa.player.getAnimations(),this.mapa.enemies ,this.mapa.musica);
 
         //Sonidos
         this.spiderSound = this.game.add.audio('spiderSound');
-        this.gemSound = this.game.add.audio('gemSound');
-        this.rocketSound = this.game.add.audio('rocketSound');
+        this.gravitySound = this.game.add.audio('gravitySound');
+
     },
     
     //IS called one per frame.
@@ -30,6 +33,7 @@ var PlayScene =
             //UPDATE DE TODAS LAS ENTIDADES
             //COLISION JUGADOR - TILES
             this.game.physics.arcade.collide(this.mapa.player, this.mapa.getGroundLayer());
+
 
             //COLISION ENEMIGOS - TRIGGERS
             this.mapa.enemies.forEach(function(enemy) 
@@ -43,12 +47,13 @@ var PlayScene =
             //COLISION JUGADOR - MUERTE (ENEMIGOS Y CAPA MUERTE)
             this.checkPlayerDeath();
 
-            //COLISION JUGADOR - COHETE
-            //COLISION JUGADOR - GEMAS
-
-            this.checkFinalLevel();
-            this.checkCollisionWithGem();
-
+      
+            //COLISION JUGADOR - GRAVEDAD
+            //COLISION JUGADOR - BANDERA
+            this.checkModifyGravity();
+            this.checkCollisionWithFlag();
+            
+          
             //Detectar input de pausa
             this.pausa.inputPause();
         }
@@ -96,43 +101,6 @@ var PlayScene =
     return false;
   },
 
-    checkCollisionWithGem: function()
-    {
-        this.mapa.gems.forEach(function(gem) 
-        {
-            var bool = this.game.physics.arcade.collide(gem, this.mapa.player)
-            if (bool)
-            {
-                this.gemSound.play();
-                this.mapa.currentGems--;
-                gem.destroy();
-            }
-        }.bind(this));
-            
-    },
-
-    checkFinalLevel: function()
-    {
-         if(this.game.physics.arcade.collide(this.mapa.player, this.mapa.rocket) 
-            && this.mapa.currentGems === 0)
-         {
-            this.mapa.currentGems = -1;
-            this.rocketSound.play();
-
-            var timer = this.game.time.create(false);
-            this.mapa.player.visible = false;
-
-            this.mapa.rocket.animations.play('takingOff');   
-            this.mapa.rocket.body.position.y += 50;
-
-            this.mapa.rocket.body.velocity.y = -100;
-
-        //  Set a TimerEvent to occur after 3 seconds
-            timer.add(3000, this.goToNextNevel, this);
-            timer.start();
-        }
-            
-    },
 
     goToNextNevel: function()
     {
@@ -140,6 +108,26 @@ var PlayScene =
         this.destroy();
         this.game.state.start('preloader');
         
+    },
+
+    //Colision con gravityFall
+    checkModifyGravity: function()
+    {
+        if(this.game.physics.arcade.collide(this.mapa.player, this.mapa.getGravityLayer())&& 
+            this.game.time.now > nextGravityFall)
+        {
+            this.gravitySound.play();
+            this.mapa.player.swapGravity();
+            nextGravityFall = this.game.time.now + 1000;
+        }
+
+    },
+
+    checkCollisionWithFlag: function()
+    {
+        if(this.game.physics.arcade.collide(this.mapa.flag, this.mapa.player))
+            this.goToNextNevel();
+ 
     },
 
     //Configura la escena al inicio
@@ -156,13 +144,12 @@ var PlayScene =
     destroy: function()
     {
         this.spiderSound.destroy();
-        this.gemSound.destroy();
-        this.rocketSound.destroy();
+        this.gravitySound.destroy();
         this.mapa.destroy();//Destruye todo lo referente al mapa
-
+        
         this.game.world.setBounds(0,0,800,600);
     }
 
 };
 
-module.exports = PlayScene;
+module.exports = PlayScene2;

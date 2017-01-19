@@ -308,6 +308,14 @@ Player.prototype.update_ = function()
                 this.changeDirectionLeft();
             }
             this.movement(moveDirection.x);
+
+            if (this._playerState === PlayerState.FALLING)
+                if(this.body.velocity.y > 1000)
+                {
+                    console.log(this.body.velocity.y);
+                    this.body.velocity.y = 1000;
+
+                }
             break;    
 
         case PlayerState.GRAB:

@@ -68,19 +68,12 @@ function BuildMap(game)
 
         this.game.world.addChild(this.enemies);
 
-/*
+
         var gemBlue = new Gem(this.game,900,190,'gemaAzul');
         var gemGreen = new Gem(this.game,300,1720,'gemaVerde');
         var gemRed = new Gem(this.game,6740,480,'gemaRoja');
         var gemYellow = new Gem(this.game,6740,1390,'gemaAmarilla');
-        */
-
         
-        var gemBlue = new Gem(this.game,3570,1050,'gemaAzul');
-        var gemGreen = new Gem(this.game,3570,1050,'gemaVerde');
-        var gemRed = new Gem(this.game,3570,1050,'gemaRoja');
-        var gemYellow = new Gem(this.game,3570,1050,'gemaAmarilla');
-
         this.gems = this.game.add.group();
 
         this.gems.add(gemBlue);
@@ -131,16 +124,42 @@ function BuildMap(game)
 
 
         this.player = new Personajes.Player(this.game, 140,9660);
-        var enemy = new Personajes.Enemy(this.game,800,1800);
-        //var enemy2 = new Personajes.Enemy(this.game,2000,400);
 
+
+        var enemy = new Personajes.Enemy(this.game,3570,8650);
+        var enemy2 = new Personajes.Enemy(this.game,350,8790);
+        var enemy3 = new Personajes.Enemy(this.game,350,7460);
+        var enemy4 = new Personajes.Enemy(this.game,3570,7180);
+        var enemy5 = new Personajes.Enemy(this.game,2310,6130);
+        var enemy6 = new Personajes.Enemy(this.game,350,6270);
+        var enemy7 = new Personajes.Enemy(this.game,770,4660);
+        var enemy8 = new Personajes.Enemy(this.game,1050,880);
+
+        var enemy9 = new Personajes.Enemy(this.game,2940,5350);
+        var enemy10 = new Personajes.Enemy(this.game,2590,3590);
+        var enemy11 = new Personajes.Enemy(this.game,1540,2960);
+
+        enemy9.scale.y *= -1;
+        enemy10.scale.y *= -1;
+        enemy11.scale.y *= -1;
 
         this.enemies = this.game.add.group();
         this.enemies.add(enemy);
-        //this.enemies.add(enemy2);
+        this.enemies.add(enemy2);
+        this.enemies.add(enemy3);
+        this.enemies.add(enemy4);
+        this.enemies.add(enemy5);
+        this.enemies.add(enemy6);
+        this.enemies.add(enemy7);
+        this.enemies.add(enemy8);
+        this.enemies.add(enemy9);
+        this.enemies.add(enemy10);
+        this.enemies.add(enemy11);
+        
 
-        this.flag = new Objetos.Flag(this.game,260,9660);
+        this.flag = new Objetos.Flag(this.game,2730,490);
         this.game.world.addChild(this.flag);
+
 
 
         this.game.world.addChild(this.player);

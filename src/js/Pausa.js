@@ -1,10 +1,11 @@
 'use strict';
 
-function Pause (game,pausePlayer,enem) 
+function Pause (game,pausePlayer,enem,mus) 
 {
   this.game = game;
   this.returnMenu = false;
   this.pause = false;
+  this.musica = mus;
   this.playerAnimations = pausePlayer;
   this.enemies = enem;
   this.sound = this.game.add.audio('buttonSound');
@@ -46,6 +47,8 @@ Pause.prototype.createButton = function ()
 Pause.prototype.continueOnClick = function()
 {
   this.sound.play();
+  this.musica.volume= 1;
+
   this.game.physics.arcade.isPaused=false;
   this.playerAnimations.paused = false;//Paramos la animación  
   this.enemies.forEach(function(enemy) 
@@ -76,7 +79,7 @@ Pause.prototype.inputPause = function()
 {
   if (this.game.input.keyboard.isDown(Phaser.Keyboard.P))
   {        
-
+    this.musica.volume= 0;
     this.game.physics.arcade.isPaused=true;
     this.playerAnimations.paused = true;//Paramos la animación  
     this.enemies.forEach(function(enemy) 

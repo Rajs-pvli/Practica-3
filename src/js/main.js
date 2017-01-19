@@ -2,6 +2,7 @@
 
 //Require de las escenas
 var PlayScene = require('./play_scene.js');
+var PlayScene2 = require('./play_scene2.js');
 var GameOverScene = require('./gameover_scene.js');
 var MenuScene = require('./menu_scene.js');
 var FinalScene = require('./final_scene.js');
@@ -95,6 +96,11 @@ var PreloaderScene = {
       this.game.cache.removeImage('gemaAmarilla');
       this.game.cache.removeImage('gemaAzul');
       this.game.cache.removeImage('gemaVerde');
+
+
+      this.game.cache.removeSound('musica1');
+      this.game.cache.removeSound('rocketSound');
+      this.game.cache.removeSound('gemSound');
       ////////////////DESTRUIR CACHE/////////
 
       //MAPA
@@ -107,7 +113,6 @@ var PreloaderScene = {
 
       this.game.load.audio('gravitySound','sound/gravitySound.wav');
       this.game.load.audio('musica2','sound/musica2.wav');
-
     }
 
     else if(this.game.currentLevel === 3)
@@ -129,6 +134,11 @@ var PreloaderScene = {
       this.game.cache.removeImage('gameOver');
 
       this.game.load.image('fondoFinal', 'images/PantallaFinJuego.png');//Imagen del logo
+
+      this.game.cache.removeSound('musica2');
+      this.game.cache.removeSound('jumpSound');
+      this.game.cache.removeSound('gravitySound');
+      this.game.cache.removeSound('spiderSound');
       ////////////////DESTRUIR CACHE/////////
 
     }
@@ -144,10 +154,12 @@ var PreloaderScene = {
   //Evento cuando termina la carga
   loadComplete: function ()
   {
-    if (this.game.currentLevel === 3)
-      this.game.state.start('final');
-    else
+    if (this.game.currentLevel === 1)
       this.game.state.start('play');
+    else if  (this.game.currentLevel === 2)
+      this.game.state.start('play2');
+    else   
+      this.game.state.start('final');
   },
 
   //Esto debería avanzar la barra de carga
@@ -186,6 +198,7 @@ function init()
   game.state.add('menu', MenuScene);
   game.state.add('preloader', PreloaderScene);
   game.state.add('play', PlayScene);
+  game.state.add('play2', PlayScene2);
   game.state.add('gameOver', GameOverScene);
   game.state.add('final', FinalScene);
 

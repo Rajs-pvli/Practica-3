@@ -59,7 +59,12 @@ var GameOver = {
     {
         this.sound.play();
         this.music.destroy();
-        this.game.state.start('play');
+        if (this.game.currentLevel === 1)
+            this.game.state.start('play');
+
+        else if (this.game.currentLevel === 2)
+            this.game.state.start('play2');
+
     },
 
     returnMainMenu: function()
