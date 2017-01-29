@@ -1,6 +1,6 @@
-# Awesome game
+# Foxy's Space Adventure
 
-Awesome game by
+Foxy's Space Adventure by
 [gituser](https://github.com/gituser).
 
 Initial scaffolding generated with [generator-gamejam](https://github.com/belen-albeza/generator-gamejam/).
