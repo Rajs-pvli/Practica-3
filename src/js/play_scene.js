@@ -20,6 +20,7 @@ var PlayScene =
         this.spiderSound = this.game.add.audio('spiderSound');
         this.gemSound = this.game.add.audio('gemSound');
         this.rocketSound = this.game.add.audio('rocketSound');
+        this.game.input.keyboard.addKeyCapture(Phaser.Keyboard.SPACEBAR);
     },
     
     //IS called one per frame.

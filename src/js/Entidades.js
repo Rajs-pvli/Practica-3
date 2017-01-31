@@ -108,7 +108,11 @@ Enemy.prototype.changeDirectionEnemy = function(){//Cambia la dirección al choc
 
 Enemy.prototype.isTouchingUp = function()
 {
-    return (this.body.touching.up || this.body.blocked.up);
+    if (this.scale.y > 0)
+        return (this.body.touching.up || this.body.blocked.up);
+    else
+        return (this.body.touching.down || this.body.blocked.down);
+
 };
 
 /////////////////ENEMY////////////////////
@@ -310,12 +314,15 @@ Player.prototype.update_ = function()
             this.movement(moveDirection.x);
 
             if (this._playerState === PlayerState.FALLING)
-                if(this.body.velocity.y > 1000)
-                {
-                    console.log(this.body.velocity.y);
-                    this.body.velocity.y = 1000;
+            {
+                if(this.body.velocity.y > 800 && !this.gravityFall)
+                
+                    this.body.velocity.y = 800;
+                
 
-                }
+                else if(this.body.velocity.y < 800 && this.gravityFall)
+                    this.body.velocity.y = -800;
+            }
             break;    
 
         case PlayerState.GRAB:

@@ -23,6 +23,9 @@ var PlayScene2 =
         this.spiderSound = this.game.add.audio('spiderSound');
         this.gravitySound = this.game.add.audio('gravitySound');
 
+        this.game.input.keyboard.addKeyCapture(Phaser.Keyboard.SPACEBAR);
+
+
     },
     
     //IS called one per frame.
